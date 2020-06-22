@@ -1,0 +1,29 @@
+{
+    "name": "tracking3/tracking3_core-php-client",
+    "description": "PHP Client for Tracking3.io Core API",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "homepage:": "www.tracking3.io",
+    "keywords": [
+        "tracking3.io",
+        "asset management",
+        "project management"
+    ],
+    "authors": [
+        {
+            "name": "Martin Melzer",
+            "email": "tracking3@martin-melzer.de"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "php": "^7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tracking3\\Core\\Client\\": "src/"
+        }
+    }
+}
