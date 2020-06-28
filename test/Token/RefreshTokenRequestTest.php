@@ -1,0 +1,109 @@
+<?php
+
+namespace Tracking3\Core\ClientTest\Token;
+
+use JsonException;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use Tracking3\Core\Client\Configuration;
+use Tracking3\Core\Client\EnvironmentHandlingService;
+use Tracking3\Core\Client\Http\Http;
+use Tracking3\Core\Client\Token\RefreshTokenRequest;
+use Tracking3\Core\ClientTest\ReflectionTrait;
+
+class RefreshTokenRequestTest extends TestCase
+{
+
+    use ReflectionTrait;
+
+    /**
+     * @throws JsonException
+     * @throws ReflectionException
+     */
+    public function testGetRefreshToken(): void
+    {
+        $configuration = new Configuration(
+            [
+                'email' => 'john@example.com',
+                'password' => 's3cr37',
+            ]
+        );
+
+        /** @var RefreshTokenRequest|MockObject $requestMock */
+        $requestMock = $this->getMockBuilder(RefreshTokenRequest::class)
+            ->setConstructorArgs(
+                [
+                    $configuration,
+                ]
+            )
+            ->setMethodsExcept(['getRefreshToken'])
+            ->getMock();
+
+        $httpMock = $this->getMockBuilder(Http::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // test $rememberMe = null -> false
+        $httpMock->expects(self::at(0))
+            ->method('get')
+            ->with(
+                implode(
+                    '/',
+                    [
+                        EnvironmentHandlingService::API_URI_ENV_PRODUCTION,
+                        EnvironmentHandlingService::API_VERSION,
+                        'token',
+                        'refresh?remember-me=false',
+                    ]
+                )
+            )
+            ->willReturn(['payload' => ['jwt' => 'json.web.token']]);
+
+        // test $rememberMe = false -> false
+        $httpMock->expects(self::at(1))
+            ->method('get')
+            ->with(
+                implode(
+                    '/',
+                    [
+                        EnvironmentHandlingService::API_URI_ENV_PRODUCTION,
+                        EnvironmentHandlingService::API_VERSION,
+                        'token',
+                        'refresh?remember-me=false',
+                    ]
+                )
+            )
+            ->willReturn(['payload' => ['jwt' => 'json.web.token']]);
+
+        // test $rememberMe = true -> true
+        $httpMock->expects(self::at(2))
+            ->method('get')
+            ->with(
+                implode(
+                    '/',
+                    [
+                        EnvironmentHandlingService::API_URI_ENV_PRODUCTION,
+                        EnvironmentHandlingService::API_VERSION,
+                        'token',
+                        'refresh?remember-me=true',
+                    ]
+                )
+            )
+            ->willReturn(['payload' => ['jwt' => 'json.web.token']]);
+
+        $requestMock->method('getHttp')
+            ->willReturn($httpMock);
+
+        $this->reflectProperties(
+            $requestMock,
+            [
+                'http' => $httpMock,
+            ]
+        );
+
+        self::assertEquals('json.web.token', $requestMock->getRefreshToken());
+        self::assertEquals('json.web.token', $requestMock->getRefreshToken(false));
+        self::assertEquals('json.web.token', $requestMock->getRefreshToken(true));
+    }
+}

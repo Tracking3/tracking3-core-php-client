@@ -3,7 +3,7 @@
     "description": "PHP Client for Tracking3.io Core API",
     "minimum-stability": "stable",
     "license": "MIT",
-    "homepage:": "www.tracking3.io",
+    "homepage": "https://www.tracking3.io",
     "keywords": [
         "tracking3.io",
         "asset management",
@@ -19,11 +19,25 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^7.3"
+        "php": "^7.3",
+        "ext-curl": "*",
+        "ext-fileinfo": "*",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
             "Tracking3\\Core\\Client\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tracking3\\Core\\ClientTest\\": "test/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2"
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }
