@@ -5,7 +5,6 @@ namespace Tracking3\Core\ClientTest\Token;
 use JsonException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use ReflectionException;
 use Tracking3\Core\Client\Configuration;
 use Tracking3\Core\Client\EnvironmentHandlingService;
 use Tracking3\Core\Client\Http\Http;
@@ -19,7 +18,6 @@ class AccessTokenRequestTest extends TestCase
 
     /**
      * @throws JsonException
-     * @throws ReflectionException
      */
     public function testGetAccessToken(): void
     {
@@ -61,13 +59,6 @@ class AccessTokenRequestTest extends TestCase
 
         $requestMock->method('getHttp')
             ->willReturn($httpMock);
-
-        $this->reflectProperties(
-            $requestMock,
-            [
-                'http' => $httpMock,
-            ]
-        );
 
         self::assertEquals('json.web.token', $requestMock->getAccessToken());
     }

@@ -5,7 +5,6 @@ namespace Tracking3\Core\ClientTest\Organisation;
 use JsonException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use ReflectionException;
 use Tracking3\Core\Client\Configuration;
 use Tracking3\Core\Client\EnvironmentHandlingService;
 use Tracking3\Core\Client\Http\Http;
@@ -24,7 +23,6 @@ class OrganisationRequestTest extends TestCase
 
     /**
      * @throws JsonException
-     * @throws ReflectionException
      */
     public function testGetOrganisationToken(): void
     {
@@ -70,13 +68,6 @@ class OrganisationRequestTest extends TestCase
 
         $requestMock->method('getHttp')
             ->willReturn($httpMock);
-
-        $this->reflectProperties(
-            $requestMock,
-            [
-                'http' => $httpMock,
-            ]
-        );
 
         // test $returnAsObject = null -> object
         $firstResult = $requestMock->getOrganisation(self::ID_ORGANISATION);

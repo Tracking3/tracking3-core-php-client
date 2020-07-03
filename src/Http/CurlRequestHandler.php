@@ -47,8 +47,12 @@ class CurlRequestHandler implements RequestHandlerInterface
         $headers['Authorization'] = $this->getAuthorizationHeaderValue($configuration);
         $headers['Content-Type'] = 'application/json';
         $headers['User-Agent'] = 'Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION;
-        $headers['X-Application-Id'] = $configuration->getApplicationId();
-        $headers['X-Strip-Leading-Brackets'] = $configuration->isStripLeadingBrackets();
+        $headers['X-Strip-Leading-Brackets'] = $configuration->isStripLeadingBrackets()
+            ? 'true'
+            : 'false';
+        if ($configuration->hasApplicationId()) {
+            $headers['X-Application-Id'] = $configuration->getApplicationId();
+        }
 
         // custom headers will overwrite default headers
         $headers = array_merge($headers, $customHeaders);
@@ -59,21 +63,21 @@ class CurlRequestHandler implements RequestHandlerInterface
             $headers['Content-Type'] = 'multipart/form-data; boundary=' . $boundary;
             $this->prepareMultipart($requestBody, $file, $boundary);
         } elseif (!empty($requestBody)) {
-            $this->curl->setOption(CURLOPT_POSTFIELDS, $requestBody);
+            $this->getCurl()->setOption(CURLOPT_POSTFIELDS, $requestBody);
         }
 
         // set curl options
-        $this->curl->setOption(CURLOPT_CUSTOMREQUEST, $httpMethod);
-        $this->curl->setOption(CURLOPT_HTTPHEADER, $this->convertHeaders($headers));
-        $this->curl->setOption(CURLOPT_RETURNTRANSFER, true);
-        $this->curl->setOption(CURLOPT_TIMEOUT, $configuration->getTimeout());
-        $this->curl->setOption(CURLOPT_URL, $uri);
+        $this->getCurl()->setOption(CURLOPT_CUSTOMREQUEST, $httpMethod);
+        $this->getCurl()->setOption(CURLOPT_HTTPHEADER, $this->convertHeaders($headers));
+        $this->getCurl()->setOption(CURLOPT_RETURNTRANSFER, true);
+        $this->getCurl()->setOption(CURLOPT_TIMEOUT, $configuration->getTimeout());
+        $this->getCurl()->setOption(CURLOPT_URL, $uri);
 
         // do request
-        $response = $this->curl->execute();
-        $httpStatus = $this->curl->getInfo(CURLINFO_HTTP_CODE);
-        $errorCode = $this->curl->getErrorCode();
-        $error = $this->curl->getError();
+        $response = $this->getCurl()->execute();
+        $httpStatus = $this->getCurl()->getInfo(CURLINFO_HTTP_CODE);
+        $errorCode = $this->getCurl()->getErrorCode();
+        $error = $this->getCurl()->getError();
 
         if ($errorCode === 28 && $httpStatus === 0) {
             throw new Timeout(
@@ -82,7 +86,7 @@ class CurlRequestHandler implements RequestHandlerInterface
             );
         }
 
-        $this->curl->close();
+        $this->getCurl()->close();
 
         if ($errorCode) {
             throw new Connection(
@@ -197,9 +201,17 @@ class CurlRequestHandler implements RequestHandlerInterface
         $body[] = '';
 
         // set options
-        $this->curl->setOption(CURLOPT_POST, true);
-        $this->curl->setOption(CURLOPT_POSTFIELDS, implode("\r\n", $body));
+        $this->getCurl()->setOption(CURLOPT_POST, true);
+        $this->getCurl()->setOption(CURLOPT_POSTFIELDS, implode("\r\n", $body));
     }
 
+
+    /**
+     * @return HttpRequest
+     */
+    public function getCurl(): HttpRequest
+    {
+        return $this->curl;
+    }
 
 }
