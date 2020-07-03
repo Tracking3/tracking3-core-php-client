@@ -71,12 +71,6 @@ class Configuration
 
 
     /**
-     * @var bool
-     */
-    private $stripLeadingBrackets = true;
-
-
-    /**
      * Configuration constructor.
      *
      * @param array $config
@@ -89,7 +83,6 @@ class Configuration
      *     'timeout' => 60,
      *     'apiVersion' => EnvironmentHandlingService::API_VERSION,
      *     'environment' => EnvironmentHandlingService::ENV_PRODUCTION,
-     *     'stripLeadingBrackets' => true|false,
      * ]);
      *
      */
@@ -117,8 +110,6 @@ class Configuration
         $this->environment = $this->parseEnvironment($config['environment'] ?? null);
         $this->applicationId = $config['applicationId'] ?? null;
         $this->doAutoLogin = $config['doAutoLogin'] ?? $this->doAutoLogin;
-        $this->stripLeadingBrackets = $config['stripLeadingBrackets'] ?? $this->stripLeadingBrackets;
-
     }
 
 
@@ -393,35 +384,6 @@ class Configuration
     public function setDoAutoLogin(bool $doAutoLogin): Configuration
     {
         $this->doAutoLogin = $doAutoLogin;
-        return $this;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function isStripLeadingBrackets(): bool
-    {
-        return $this->stripLeadingBrackets;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasStripLeadingBrackets(): bool
-    {
-        return null !== $this->stripLeadingBrackets;
-    }
-
-
-    /**
-     * @param bool $stripLeadingBrackets
-     * @return Configuration
-     */
-    public function setStripLeadingBrackets(bool $stripLeadingBrackets): Configuration
-    {
-        $this->stripLeadingBrackets = $stripLeadingBrackets;
         return $this;
     }
 }

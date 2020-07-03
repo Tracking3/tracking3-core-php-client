@@ -2,6 +2,7 @@
 
 namespace Tracking3\Core\ClientTest\Http;
 
+use JsonException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tracking3\Core\Client\Configuration;
@@ -14,6 +15,9 @@ class CurlRequestHandlerTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @throws JsonException
+     */
     public function testDoRequestDefault(): void
     {
         $returnPayload = [
@@ -47,7 +51,7 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Basic am9obkBleGFtcGxlLmNvbTpzM2NyMzc=',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client 0.0.1-rc1',
-                'X-Strip-Leading-Brackets: true',
+                'X-Strip-Leading-Brackets: false',
             ]
         );
 
@@ -61,20 +65,22 @@ class CurlRequestHandlerTest extends TestCase
         self::assertSame(
             [
                 'status' => $curlMock->info[CURLINFO_HTTP_CODE],
-                'body' => $returnPayload,
+                'body' => json_encode($returnPayload, JSON_THROW_ON_ERROR),
             ],
             $return
         );
     }
 
 
+    /**
+     * @throws JsonException
+     */
     public function testDoRequestExpectTimeout(): void
     {
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
         [
             $requestHandler,
-            $curlMock,
         ] = $this->prepareRequestHandler(
             null,
             28,
@@ -96,6 +102,9 @@ class CurlRequestHandlerTest extends TestCase
     }
 
 
+    /**
+     * @throws JsonException
+     */
     public function testDoRequestExpectConnectionError(): void
     {
         /** @var CurlRequestHandler $requestHandler */
@@ -123,6 +132,9 @@ class CurlRequestHandlerTest extends TestCase
     }
 
 
+    /**
+     * @throws JsonException
+     */
     public function testDoRequestCustomHeaders(): void
     {
         /** @var CurlRequestHandler $requestHandler */
@@ -173,6 +185,9 @@ class CurlRequestHandlerTest extends TestCase
     }
 
 
+    /**
+     * @throws JsonException
+     */
     public function testAuthorizationHeaderEmailPassword(): void
     {
         /** @var CurlRequestHandler $requestHandler */
@@ -204,12 +219,15 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Basic Zm9vQGJhci5jb206bWllcA==',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client 0.0.1-rc1',
-                'X-Strip-Leading-Brackets: true',
+                'X-Strip-Leading-Brackets: false',
             ]
         );
     }
 
 
+    /**
+     * @throws JsonException
+     */
     public function testAuthorizationHeaderRefreshToken(): void
     {
         /** @var CurlRequestHandler $requestHandler */
@@ -240,13 +258,16 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Bearer json.refresh.token',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client 0.0.1-rc1',
-                'X-Strip-Leading-Brackets: true',
+                'X-Strip-Leading-Brackets: false',
             ]
         );
     }
 
 
-    public function testAuthorizationHeaderAccessToken()
+    /**
+     * @throws JsonException
+     */
+    public function testAuthorizationHeaderAccessToken(): void
     {
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
@@ -276,7 +297,7 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Bearer json.access.token',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client 0.0.1-rc1',
-                'X-Strip-Leading-Brackets: true',
+                'X-Strip-Leading-Brackets: false',
             ]
         );
     }
@@ -334,6 +355,7 @@ class CurlRequestHandlerTest extends TestCase
      * @param int $errorCode
      * @param int $httpStatusCode
      * @return array
+     * @throws JsonException
      */
     protected function prepareRequestHandler(
         ?array $returnPayload = null,
@@ -350,7 +372,7 @@ class CurlRequestHandlerTest extends TestCase
             ->getMock();
 
         $curlMock = new CurlMock();
-        $curlMock->result = $returnPayload;
+        $curlMock->result = ")]}',\n" . json_encode($returnPayload, JSON_THROW_ON_ERROR);
         $curlMock->errorCode = $errorCode;
         $curlMock->info[CURLINFO_HTTP_CODE] = $httpStatusCode;
 

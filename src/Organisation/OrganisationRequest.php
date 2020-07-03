@@ -30,9 +30,9 @@ class OrganisationRequest extends AbstractRequest
         $data = $this->getHttp()->get($uri);
 
         if ($returnAsObject) {
-            return new Organisation($data);
+            return new Organisation($data['payload']);
         }
 
-        return $data;
+        return $data['payload'];
     }
 }

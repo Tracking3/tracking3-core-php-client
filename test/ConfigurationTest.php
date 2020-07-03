@@ -27,9 +27,6 @@ class ConfigurationTest extends TestCase
     public const FIXTURE_PASSWORD = 's3cr37';
 
 
-    public const FIXTURE_STRIP_LEADING_BRACKETS = true;
-
-
     public const FIXTURE_TIMEOUT = 60;
 
 
@@ -50,7 +47,6 @@ class ConfigurationTest extends TestCase
         self::assertEquals(self::FIXTURE_TIMEOUT, $configuration->getTimeout());
         self::assertEquals(self::FIXTURE_API_VERSION, $configuration->getApiVersion());
         self::assertEquals(self::FIXTURE_ENVIRONMENT, $configuration->getEnvironment());
-        self::assertEquals(self::FIXTURE_STRIP_LEADING_BRACKETS, $configuration->isStripLeadingBrackets());
     }
 
 
@@ -65,7 +61,6 @@ class ConfigurationTest extends TestCase
                 'timeout' => self::FIXTURE_TIMEOUT + 1,
                 'apiVersion' => 'v0.0.0',
                 'environment' => EnvironmentHandlingService::ENV_DEVELOPMENT,
-                'stripLeadingBrackets' => false,
             ]
         );
 
@@ -76,7 +71,6 @@ class ConfigurationTest extends TestCase
         self::assertEquals(self::FIXTURE_TIMEOUT, $configuration->getTimeout());
         self::assertEquals('v0.0.0', $configuration->getApiVersion());
         self::assertEquals(EnvironmentHandlingService::ENV_DEVELOPMENT, $configuration->getEnvironment());
-        self::assertEquals(false, $configuration->isStripLeadingBrackets());
     }
 
 

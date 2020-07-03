@@ -61,9 +61,11 @@ class OrganisationRequestTest extends TestCase
             )
             ->willReturn(
                 [
-                    'idOrganisation' => self::ID_ORGANISATION,
-                    'label' => self::LABEL,
-                ]
+                    'payload' => [
+                        'idOrganisation' => self::ID_ORGANISATION,
+                        'label' => self::LABEL,
+                    ],
+                ],
             );
 
         $requestMock->method('getHttp')
