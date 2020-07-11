@@ -11,7 +11,7 @@ Add the following repository to your `composer.json`
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/Halanson/tracking3_core-php-client.git"
+            "url": "https://github.com/Halanson/tracking3-core-php-client.git"
         }
     ],
         
@@ -21,7 +21,7 @@ Add the following repository to your `composer.json`
 
 Run composer
 ```shell script
-composer require tracking3/tracking3_core-php-client
+composer require tracking3/tracking3-core-php-client
 ```
 
 ### Usage

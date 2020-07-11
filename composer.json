@@ -1,5 +1,5 @@
 {
-    "name": "tracking3/tracking3_core-php-client",
+    "name": "tracking3/tracking3-core-php-client",
     "description": "PHP Client for Tracking3.io Core API",
     "minimum-stability": "stable",
     "license": "MIT",
@@ -24,6 +24,9 @@
         "ext-fileinfo": "*",
         "ext-json": "*"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2"
+    },
     "autoload": {
         "psr-4": {
             "Tracking3\\Core\\Client\\": "src/"
@@ -33,9 +36,6 @@
         "psr-4": {
             "Tracking3\\Core\\ClientTest\\": "test/"
         }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.2"
     },
     "scripts": {
         "test": "phpunit"
