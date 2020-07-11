@@ -92,7 +92,7 @@ class Configuration
             $this->password = $config['password'];
         } else {
             throw new InvalidArgumentException(
-                'No password provided, put is required',
+                'No password provided, but is required',
                 1592824383
             );
         }
@@ -101,7 +101,7 @@ class Configuration
             $this->email = $config['email'];
         } else {
             throw new InvalidArgumentException(
-                'No email provided, put is required',
+                'No email provided, but is required',
                 1592824491
             );
         }
