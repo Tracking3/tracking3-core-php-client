@@ -7,6 +7,7 @@ use JsonSerializable;
 use Tracking3\Core\Client\Configuration;
 use Tracking3\Core\Client\Exception\EmptyOrMalformedRequestBody;
 use Tracking3\Core\Client\Exception\Exception;
+use Tracking3\Core\Client\Exception\FailedDependency;
 use Tracking3\Core\Client\Exception\Forbidden;
 use Tracking3\Core\Client\Exception\MethodNotAllowed;
 use Tracking3\Core\Client\Exception\NotFound;
@@ -30,6 +31,7 @@ class Http
     public const RESPONSE_CODE_405 = 405;
     public const RESPONSE_CODE_408 = 408;
     public const RESPONSE_CODE_422 = 422;
+    public const RESPONSE_CODE_424 = 424;
     public const RESPONSE_CODE_429 = 429;
     public const RESPONSE_CODE_500 = 500;
 
@@ -105,6 +107,11 @@ class Http
                 throw new UnprocessableEntity(
                     $message,
                     1592834796
+                );
+            case self::RESPONSE_CODE_424:
+                throw new FailedDependency(
+                    $message,
+                    1592834800
                 );
             case self::RESPONSE_CODE_429:
                 throw new TooManyRequests(

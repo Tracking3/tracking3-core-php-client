@@ -6,21 +6,14 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Tracking3\Core\Client\Client;
 use Tracking3\Core\Client\Configuration;
-use Tracking3\Core\Client\Organisation\OrganisationRequest;
-use Tracking3\Core\Client\Token\AccessTokenRequest;
-use Tracking3\Core\Client\Token\RefreshTokenRequest;
 
 class ClientTest extends TestCase
 {
     public function testClassInstances(): void
     {
-        $configuration = clone $this->getConfiguration();
-        $configuration->setDoAutoLogin(false);
-
-        $client = new Client($configuration);
-        $this->assertInstanceOf(AccessTokenRequest::class, $client->accessToken());
-        $this->assertInstanceOf(RefreshTokenRequest::class, $client->refreshToken());
-        $this->assertInstanceOf(OrganisationRequest::class, $client->organisation());
+        self::assertTrue(method_exists(Client::class, 'accessToken'));
+        self::assertTrue(method_exists(Client::class, 'refreshToken'));
+        self::assertTrue(method_exists(Client::class, 'organisation'));
     }
 
 

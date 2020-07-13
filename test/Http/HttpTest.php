@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 use Tracking3\Core\Client\Configuration;
 use Tracking3\Core\Client\Exception\EmptyOrMalformedRequestBody;
+use Tracking3\Core\Client\Exception\FailedDependency;
 use Tracking3\Core\Client\Exception\Forbidden;
 use Tracking3\Core\Client\Exception\MethodNotAllowed;
 use Tracking3\Core\Client\Exception\NotFound;
@@ -104,6 +105,17 @@ class HttpTest extends TestCase
         $this->expectExceptionMessage($message);
         $this->expectExceptionCode(1592834796);
         Http::throwStatusCodeException(Http::RESPONSE_CODE_422, $message);
+    }
+
+
+    public function testThrowStatusCodeException424(): void
+    {
+        $message = 'my-custom-message';
+
+        $this->expectException(FailedDependency::class);
+        $this->expectExceptionMessage($message);
+        $this->expectExceptionCode(1592834800);
+        Http::throwStatusCodeException(Http::RESPONSE_CODE_424, $message);
     }
 
 
