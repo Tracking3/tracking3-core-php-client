@@ -20,7 +20,7 @@ use Tracking3\Core\Client\Exception\UnprocessableEntity;
 use Tracking3\Core\Client\Http\CurlRequestHandler;
 use Tracking3\Core\Client\Http\Http;
 use Tracking3\Core\Client\Http\RequestHandlerInterface;
-use Tracking3\Core\Client\Organisation\Organisation;
+use Tracking3\Core\ClientTest\Fixtures\ApiObjectFixture;
 use Tracking3\Core\ClientTest\ReflectionTrait;
 
 class HttpTest extends TestCase
@@ -181,12 +181,9 @@ class HttpTest extends TestCase
 
     public function testCreateWithObjectPayloadWillSucceed(): void
     {
-        $payload = new Organisation(
-            [
-                'idOrganisation' => 'my-uuid-version-four',
-                'label' => 'my awesome organisation',
-            ]
-        );
+        $payload = new ApiObjectFixture();
+        $payload->foo = 'foo';
+        $payload->bar = 'bar';
 
         $curlMock = $this->getMockBuilder(CurlRequestHandler::class)
             ->getMock();
