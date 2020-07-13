@@ -107,9 +107,10 @@ class Configuration
         }
 
         $this->apiVersion = $config['apiVersion'] ?? $this->apiVersion;
-        $this->environment = $this->parseEnvironment($config['environment'] ?? null);
         $this->applicationId = $config['applicationId'] ?? null;
         $this->doAutoLogin = $config['doAutoLogin'] ?? $this->doAutoLogin;
+        $this->environment = $this->parseEnvironment($config['environment'] ?? null);
+        $this->timeout = $config['timeout'] ?? $this->timeout;
     }
 
 

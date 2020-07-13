@@ -58,7 +58,7 @@ class ConfigurationTest extends TestCase
                 'email' => self::FIXTURE_EMAIL,
                 'applicationId' => self::FIXTURE_APPLICATION_ID,
                 'doAutoLogin' => false,
-                'timeout' => self::FIXTURE_TIMEOUT + 1,
+                'timeout' => 23,
                 'apiVersion' => 'v0.0.0',
                 'environment' => EnvironmentHandlingService::ENV_DEVELOPMENT,
             ]
@@ -68,7 +68,7 @@ class ConfigurationTest extends TestCase
         self::assertEquals(self::FIXTURE_EMAIL, $configuration->getEmail());
         self::assertEquals(self::FIXTURE_APPLICATION_ID, $configuration->getApplicationId());
         self::assertEquals(false, $configuration->isDoAutoLogin());
-        self::assertEquals(self::FIXTURE_TIMEOUT, $configuration->getTimeout());
+        self::assertEquals(23, $configuration->getTimeout());
         self::assertEquals('v0.0.0', $configuration->getApiVersion());
         self::assertEquals(EnvironmentHandlingService::ENV_DEVELOPMENT, $configuration->getEnvironment());
     }
