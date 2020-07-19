@@ -2,8 +2,6 @@
 
 namespace Tracking3\Core\Client;
 
-use JsonException;
-
 class Client
 {
     /**
@@ -14,12 +12,11 @@ class Client
 
     /**
      * @param Configuration $configuration
-     * @throws JsonException
      */
     public function __construct(Configuration $configuration)
     {
+        $configuration->setClient($this);
         $this->configuration = $configuration;
-        $this->doAutoLogin();
     }
 
 
@@ -51,16 +48,19 @@ class Client
 
 
     /**
-     * @throws JsonException
+     * @return Configuration
      */
-    protected function doAutoLogin(): void
+    public function getConfiguration(): Configuration
     {
-        if (
-            !$this->configuration->hasAccessToken()
-            && $this->configuration->isDoAutoLogin()
-        ) {
-            $this->refreshToken()->getRefreshToken(false);
-            $this->accessToken()->getAccessToken();
-        }
+        return $this->configuration;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function hasConfiguration(): bool
+    {
+        return null !== $this->configuration;
     }
 }

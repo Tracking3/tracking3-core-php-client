@@ -14,10 +14,12 @@ class OrganisationRequest extends AbstractRequest
      * @return array|Organisation
      * @throws JsonException
      */
-    public function getOrganisation(
+    public function get(
         string $idOrganisation,
         bool $returnAsObject = true
     ) {
+        $this->doAutoLogin();
+
         $uri = implode(
             '/',
             [

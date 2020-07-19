@@ -41,10 +41,10 @@ $client = new Client(
 );
 
 // will return an object of Organisation
-$organisation = $client->organisation()->getOrganisation($idOrganisation);
+$organisation = $client->organisation()->get($idOrganisation);
 
 // will return an array
-$organisationArray = $client->organisation()->getOrganisation($idOrganisation, false); 
+$organisationArray = $client->organisation()->get($idOrganisation, false); 
 ```
 
 ### Configuration

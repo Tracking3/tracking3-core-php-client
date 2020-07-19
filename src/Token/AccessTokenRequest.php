@@ -12,7 +12,7 @@ class AccessTokenRequest extends AbstractRequest
      * @return string
      * @throws JsonException
      */
-    public function getAccessToken(): string
+    public function get(): string
     {
         $uri = implode(
             '/',

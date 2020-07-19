@@ -2,6 +2,7 @@
 
 namespace Tracking3\Core\Client;
 
+use JsonException;
 use Tracking3\Core\Client\Http\CurlRequestHandler;
 use Tracking3\Core\Client\Http\Http;
 use Tracking3\Core\Client\Http\RequestHandlerInterface;
@@ -51,4 +52,20 @@ abstract class AbstractRequest
     {
         return $this->http;
     }
+
+
+    /**
+     * @throws JsonException
+     */
+    protected function doAutoLogin(): void
+    {
+        if (
+            !$this->configuration->hasAccessToken()
+            && $this->configuration->isDoAutoLogin()
+        ) {
+            $this->configuration->getClient()->refreshToken()->get(false);
+            $this->configuration->getClient()->accessToken()->get();
+        }
+    }
+
 }

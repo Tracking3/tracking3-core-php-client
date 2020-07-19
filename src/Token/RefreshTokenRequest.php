@@ -13,7 +13,7 @@ class RefreshTokenRequest extends AbstractRequest
      * @return string
      * @throws JsonException
      */
-    public function getRefreshToken(
+    public function get(
         bool $rememberMe = false
     ): string {
         $uri = implode(

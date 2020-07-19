@@ -35,7 +35,7 @@ class AccessTokenRequestTest extends TestCase
                     $configuration,
                 ]
             )
-            ->setMethodsExcept(['getAccessToken'])
+            ->setMethodsExcept(['get'])
             ->getMock();
 
         $httpMock = $this->getMockBuilder(Http::class)
@@ -60,6 +60,6 @@ class AccessTokenRequestTest extends TestCase
         $requestMock->method('getHttp')
             ->willReturn($httpMock);
 
-        self::assertEquals('json.web.token', $requestMock->getAccessToken());
+        self::assertEquals('json.web.token', $requestMock->get());
     }
 }

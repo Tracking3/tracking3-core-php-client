@@ -35,7 +35,7 @@ class RefreshTokenRequestTest extends TestCase
                     $configuration,
                 ]
             )
-            ->setMethodsExcept(['getRefreshToken'])
+            ->setMethodsExcept(['get'])
             ->getMock();
 
         $httpMock = $this->getMockBuilder(Http::class)
@@ -93,8 +93,8 @@ class RefreshTokenRequestTest extends TestCase
         $requestMock->method('getHttp')
             ->willReturn($httpMock);
 
-        self::assertEquals('json.web.token', $requestMock->getRefreshToken());
-        self::assertEquals('json.web.token', $requestMock->getRefreshToken(false));
-        self::assertEquals('json.web.token', $requestMock->getRefreshToken(true));
+        self::assertEquals('json.web.token', $requestMock->get());
+        self::assertEquals('json.web.token', $requestMock->get(false));
+        self::assertEquals('json.web.token', $requestMock->get(true));
     }
 }

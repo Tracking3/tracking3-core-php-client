@@ -71,6 +71,12 @@ class Configuration
 
 
     /**
+     * @var Client
+     */
+    private $client;
+
+
+    /**
      * Configuration constructor.
      *
      * @param array $config
@@ -385,6 +391,35 @@ class Configuration
     public function setDoAutoLogin(bool $doAutoLogin): Configuration
     {
         $this->doAutoLogin = $doAutoLogin;
+        return $this;
+    }
+
+
+    /**
+     * @return Client
+     */
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function hasClient(): bool
+    {
+        return null !== $this->client;
+    }
+
+
+    /**
+     * @param Client $client
+     * @return Configuration
+     */
+    public function setClient(Client $client): Configuration
+    {
+        $this->client = $client;
         return $this;
     }
 }
