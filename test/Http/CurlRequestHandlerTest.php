@@ -6,6 +6,7 @@ use JsonException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tracking3\Core\Client\Configuration;
+use Tracking3\Core\Client\EnvironmentHandlingService;
 use Tracking3\Core\Client\Exception\Connection;
 use Tracking3\Core\Client\Exception\Timeout;
 use Tracking3\Core\Client\Http\CurlRequestHandler;
@@ -50,7 +51,7 @@ class CurlRequestHandlerTest extends TestCase
                 'Accept: application/json',
                 'Authorization: Basic am9obkBleGFtcGxlLmNvbTpzM2NyMzc=',
                 'Content-Type: application/json',
-                'User-Agent: Tracking3 Core PHP Client 0.0.1-rc1',
+                'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
                 'X-Strip-Leading-Brackets: false',
             ]
         );
@@ -218,7 +219,7 @@ class CurlRequestHandlerTest extends TestCase
                 'Accept: application/json',
                 'Authorization: Basic Zm9vQGJhci5jb206bWllcA==',
                 'Content-Type: application/json',
-                'User-Agent: Tracking3 Core PHP Client 0.0.1-rc1',
+                'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
                 'X-Strip-Leading-Brackets: false',
             ]
         );
@@ -257,7 +258,7 @@ class CurlRequestHandlerTest extends TestCase
                 'Accept: application/json',
                 'Authorization: Bearer json.refresh.token',
                 'Content-Type: application/json',
-                'User-Agent: Tracking3 Core PHP Client 0.0.1-rc1',
+                'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
                 'X-Strip-Leading-Brackets: false',
             ]
         );
@@ -296,8 +297,45 @@ class CurlRequestHandlerTest extends TestCase
                 'Accept: application/json',
                 'Authorization: Bearer json.access.token',
                 'Content-Type: application/json',
-                'User-Agent: Tracking3 Core PHP Client 0.0.1-rc1',
+                'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
                 'X-Strip-Leading-Brackets: false',
+            ]
+        );
+    }
+
+
+    public function testIdApiTransactionHeaderIsPresent(): void
+    {
+        /** @var CurlRequestHandler $requestHandler */
+        /** @var CurlMock $curlMock */
+        [
+            $requestHandler,
+            $curlMock,
+        ] = $this->prepareRequestHandler(
+            null,
+            0,
+            200,
+        );
+
+        $configuration = clone $this->getConfiguration();
+        $configuration->setIdApiTransaction('uuid-api-transaction');
+
+        $requestHandler->doRequest(
+            'GET',
+            'my/uri',
+            $configuration
+        );
+
+        // headers
+        $this->assertHeaders(
+            $curlMock,
+            [
+                'Accept: application/json',
+                'Authorization: Basic am9obkBleGFtcGxlLmNvbTpzM2NyMzc=',
+                'Content-Type: application/json',
+                'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
+                'X-Strip-Leading-Brackets: false',
+                'X-Id-Api-Transaction: uuid-api-transaction',
             ]
         );
     }
@@ -335,7 +373,7 @@ class CurlRequestHandlerTest extends TestCase
             )
         );
 
-        $missingHeaders = array_diff($curlMock->options[CURLOPT_HTTPHEADER], $expectedHeaders);
+        $missingHeaders = array_diff($expectedHeaders, $curlMock->options[CURLOPT_HTTPHEADER]);
         self::assertCount(
             0,
             $missingHeaders,

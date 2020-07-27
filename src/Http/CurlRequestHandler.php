@@ -51,6 +51,9 @@ class CurlRequestHandler implements RequestHandlerInterface
         if ($configuration->hasApplicationId()) {
             $headers['X-Application-Id'] = $configuration->getApplicationId();
         }
+        if ($configuration->hasIdApiTransaction()) {
+            $headers['X-Id-Api-Transaction'] = $configuration->getIdApiTransaction();
+        }
 
         // custom headers will overwrite default headers
         $headers = array_merge($headers, $customHeaders);

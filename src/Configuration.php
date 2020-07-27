@@ -61,6 +61,12 @@ class Configuration
 
 
     /**
+     * @var null|string
+     */
+    private $idApiTransaction;
+
+
+    /**
      * If `true` this client automatically tries to attempt an access token
      * before the first request is executed.
      * If `false` you have to deal with access tokens/login yourself.
@@ -89,6 +95,7 @@ class Configuration
      *     'timeout' => 60,
      *     'apiVersion' => EnvironmentHandlingService::API_VERSION,
      *     'environment' => EnvironmentHandlingService::ENV_PRODUCTION,
+     *     'idApiTransaction' => 'uuid-api-transaction',
      * ]);
      *
      */
@@ -117,14 +124,15 @@ class Configuration
         $this->doAutoLogin = $config['doAutoLogin'] ?? $this->doAutoLogin;
         $this->environment = $this->parseEnvironment($config['environment'] ?? null);
         $this->timeout = $config['timeout'] ?? $this->timeout;
+        $this->idApiTransaction = $config['idApiTransaction'] ?? null;
     }
 
 
     /**
      * @param null|string $environment
-     * @return null|string
+     * @return string
      */
-    public function parseEnvironment(?string $environment)
+    public function parseEnvironment(?string $environment): string
     {
         if (in_array($environment, self::ENVIRONMENTS, true)) {
             return $environment;
@@ -363,6 +371,33 @@ class Configuration
     {
         $this->applicationId = $applicationId;
         return $this;
+    }
+
+
+    /**
+     * @return null|string
+     */
+    public function getIdApiTransaction(): ?string
+    {
+        return $this->idApiTransaction;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function hasIdApiTransaction(): bool
+    {
+        return null !== $this->idApiTransaction;
+    }
+
+
+    /**
+     * @param null|string $idApiTransaction
+     */
+    public function setIdApiTransaction(?string $idApiTransaction): void
+    {
+        $this->idApiTransaction = $idApiTransaction;
     }
 
 
