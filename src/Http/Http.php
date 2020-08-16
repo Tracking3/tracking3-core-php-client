@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tracking3\Core\Client\Http;
 
 use JsonException;
@@ -75,52 +77,52 @@ class Http
         switch ($statusCode) {
             case self::RESPONSE_CODE_400:
                 throw new EmptyOrMalformedRequestBody(
-                    $message,
+                    $message ?? 'Empty or Malformed Request Body.',
                     1592834790
                 );
             case self::RESPONSE_CODE_401:
                 throw new Unauthorized(
-                    $message,
+                    $message ?? 'Unauthorized.',
                     1592834791
                 );
             case self::RESPONSE_CODE_403:
                 throw new Forbidden(
-                    $message,
+                    $message ?? 'Forbidden.',
                     1592834792
                 );
             case self::RESPONSE_CODE_404:
                 throw new NotFound(
-                    $message,
+                    $message ?? 'Not Found.',
                     1592834793
                 );
             case self::RESPONSE_CODE_405:
                 throw new MethodNotAllowed(
-                    $message,
+                    $message ?? 'Method Not Allowed.',
                     1592834794
                 );
             case self::RESPONSE_CODE_408:
                 throw new RequestTimeout(
-                    $message,
+                    $message ?? 'Request Timeout.',
                     1592834795
                 );
             case self::RESPONSE_CODE_422:
                 throw new UnprocessableEntity(
-                    $message,
+                    $message ?? 'Unprocessable Entity',
                     1592834796
                 );
             case self::RESPONSE_CODE_424:
                 throw new FailedDependency(
-                    $message,
+                    $message ?? 'Failed Dependency.',
                     1592834800
                 );
             case self::RESPONSE_CODE_429:
                 throw new TooManyRequests(
-                    $message,
+                    $message ?? 'Too Many Requests.',
                     1592834797
                 );
             case self::RESPONSE_CODE_500:
                 throw new ServerError(
-                    $message,
+                    $message ?? 'Internal Server Error.',
                     1592834798
                 );
             default:

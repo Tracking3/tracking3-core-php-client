@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tracking3\Core\ClientTest\Http;
 
 use Tracking3\Core\Client\Http\HttpRequest;
@@ -53,7 +55,7 @@ class CurlMock implements HttpRequest
     public $result;
 
 
-    public function setOption(string $name, $value)
+    public function setOption(int $name, $value)
     {
         $this->options[$name] = $value;
     }
@@ -66,7 +68,7 @@ class CurlMock implements HttpRequest
     }
 
 
-    public function getInfo(string $name)
+    public function getInfo(int $name)
     {
         return $this->info[$name];
     }

@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tracking3\Core\Client\Http;
 
 interface HttpRequest
 {
     /**
-     * @param string $name
+     * @param int $name
      * @param mixed $value
      */
-    public function setOption(string $name, $value);
+    public function setOption(int $name, $value);
 
 
     /**
@@ -18,10 +20,10 @@ interface HttpRequest
 
 
     /**
-     * @param string $name
+     * @param int $name
      * @return mixed
      */
-    public function getInfo(string $name);
+    public function getInfo(int $name);
 
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tracking3\Core\ClientTest\Fixtures;
 
 use JsonSerializable;

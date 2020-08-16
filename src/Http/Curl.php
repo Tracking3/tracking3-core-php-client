@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 // @codeCoverageIgnoreStart
 
 namespace Tracking3\Core\Client\Http;
@@ -25,7 +27,7 @@ class Curl implements HttpRequest
      * @inheritDoc
      */
     public function setOption(
-        string $name,
+        int $name,
         $value
     ): void {
         curl_setopt($this->curl, $name, $value);
@@ -44,7 +46,7 @@ class Curl implements HttpRequest
     /**
      * @inheritDoc
      */
-    public function getInfo(string $name)
+    public function getInfo(int $name)
     {
         return curl_getinfo($this->curl, $name);
     }
