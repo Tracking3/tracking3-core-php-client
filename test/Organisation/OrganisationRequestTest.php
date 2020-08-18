@@ -12,12 +12,10 @@ use Tracking3\Core\Client\Http\Http;
 use Tracking3\Core\Client\Organisation\Organisation;
 use Tracking3\Core\Client\Organisation\OrganisationRequest;
 use Tracking3\Core\ClientTest\ConfigurationTrait;
-use Tracking3\Core\ClientTest\ReflectionTrait;
 
 class OrganisationRequestTest extends TestCase
 {
     use ConfigurationTrait;
-    use ReflectionTrait;
 
     protected const ID_ORGANISATION = 'organisation-uuid-version-four';
     protected const LABEL = 'organisation label';
@@ -67,6 +65,10 @@ class OrganisationRequestTest extends TestCase
 
         $requestMock->method('getHttp')
             ->willReturn($httpMock);
+
+        $requestMock->expects(self::exactly(3))
+            ->method('isUuidV4Valid')
+            ->with(self::ID_ORGANISATION);
 
         // test $returnAsObject = null -> object
         $firstResult = $requestMock->get(self::ID_ORGANISATION);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tracking3\Core\Client;
 
 use JsonException;
+use Tracking3\Core\Client\Exception\InvalidArgumentException;
 use Tracking3\Core\Client\Http\CurlRequestHandler;
 use Tracking3\Core\Client\Http\Http;
 use Tracking3\Core\Client\Http\RequestHandlerInterface;
@@ -28,6 +29,12 @@ abstract class AbstractRequest
      * @var RequestHandlerInterface
      */
     protected $requestHandler;
+
+
+    /**
+     * @var string
+     */
+    protected $uuidV4Regex = '/(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/';
 
 
     /**
@@ -68,6 +75,26 @@ abstract class AbstractRequest
             $this->configuration->getClient()->refreshToken()->get(false);
             $this->configuration->getClient()->accessToken()->get();
         }
+    }
+
+
+    /**
+     * @param string $uuidV4
+     * @return bool
+     */
+    public function isUuidV4Valid(string $uuidV4): bool
+    {
+        if (preg_match($this->uuidV4Regex, $uuidV4)) {
+            return true;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf(
+                'The given string identifier \'%s\' does not match the expected pattern of a UUID version 4.',
+                $uuidV4
+            ),
+            1594666596
+        );
     }
 
 }

@@ -7,6 +7,7 @@ namespace Tracking3\Core\Client\Organisation;
 use JsonException;
 use Tracking3\Core\Client\AbstractRequest;
 use Tracking3\Core\Client\EnvironmentHandlingService;
+use Tracking3\Core\Client\Organisation\Project\OrganisationProjectsRequest;
 
 class OrganisationRequest extends AbstractRequest
 {
@@ -19,7 +20,10 @@ class OrganisationRequest extends AbstractRequest
     public function get(
         string $idOrganisation,
         bool $returnAsObject = true
-    ) {
+    )
+    {
+        $this->isUuidV4Valid($idOrganisation);
+
         $this->doAutoLogin();
 
         $uri = implode(
@@ -38,5 +42,14 @@ class OrganisationRequest extends AbstractRequest
         }
 
         return $data['payload'];
+    }
+
+
+    /**
+     * @return OrganisationProjectsRequest
+     */
+    public function projects(): OrganisationProjectsRequest
+    {
+        return new OrganisationProjectsRequest($this->configuration);
     }
 }
