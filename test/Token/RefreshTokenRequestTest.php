@@ -50,6 +50,9 @@ class RefreshTokenRequestTest extends TestCase
     }
 
 
+    /**
+     * @throws JsonException
+     */
     public function testGetRefreshTokenSetRememberFalse(): void
     {
         $httpMock = $this->getHttpMock();
@@ -78,6 +81,9 @@ class RefreshTokenRequestTest extends TestCase
     }
 
 
+    /**
+     * @throws JsonException
+     */
     public function testGetRefreshTokenSetRememberTrue(): void
     {
         $httpMock = $this->getHttpMock();
