@@ -21,31 +21,14 @@ class RefreshTokenRequestTest extends TestCase
     /**
      * @throws JsonException
      */
-    public function testGetRefreshToken(): void
+    public function testGetRefreshTokenFallbackToRememberFalse(): void
     {
-        $configuration = new Configuration(
-            [
-                'email' => 'john@example.com',
-                'password' => 's3cr37',
-            ]
-        );
 
-        /** @var RefreshTokenRequest|MockObject $requestMock */
-        $requestMock = $this->getMockBuilder(RefreshTokenRequest::class)
-            ->setConstructorArgs(
-                [
-                    $configuration,
-                ]
-            )
-            ->setMethodsExcept(['get'])
-            ->getMock();
-
-        $httpMock = $this->getMockBuilder(Http::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $httpMock = $this->getHttpMock();
+        $requestMock = $this->getRequestMock();
 
         // test $rememberMe = null -> false
-        $httpMock->expects(self::at(0))
+        $httpMock->expects(self::once())
             ->method('get')
             ->with(
                 implode(
@@ -59,9 +42,21 @@ class RefreshTokenRequestTest extends TestCase
                 )
             )
             ->willReturn(['payload' => ['jwt' => 'json.web.token']]);
+
+        $requestMock->method('getHttp')
+            ->willReturn($httpMock);
+
+        self::assertEquals('json.web.token', $requestMock->get());
+    }
+
+
+    public function testGetRefreshTokenSetRememberFalse(): void
+    {
+        $httpMock = $this->getHttpMock();
+        $requestMock = $this->getRequestMock();
 
         // test $rememberMe = false -> false
-        $httpMock->expects(self::at(1))
+        $httpMock->expects(self::once())
             ->method('get')
             ->with(
                 implode(
@@ -76,8 +71,20 @@ class RefreshTokenRequestTest extends TestCase
             )
             ->willReturn(['payload' => ['jwt' => 'json.web.token']]);
 
+        $requestMock->method('getHttp')
+            ->willReturn($httpMock);
+
+        self::assertEquals('json.web.token', $requestMock->get(false));
+    }
+
+
+    public function testGetRefreshTokenSetRememberTrue(): void
+    {
+        $httpMock = $this->getHttpMock();
+        $requestMock = $this->getRequestMock();
+
         // test $rememberMe = true -> true
-        $httpMock->expects(self::at(2))
+        $httpMock->expects(self::once())
             ->method('get')
             ->with(
                 implode(
@@ -95,8 +102,40 @@ class RefreshTokenRequestTest extends TestCase
         $requestMock->method('getHttp')
             ->willReturn($httpMock);
 
-        self::assertEquals('json.web.token', $requestMock->get());
-        self::assertEquals('json.web.token', $requestMock->get(false));
         self::assertEquals('json.web.token', $requestMock->get(true));
+    }
+
+
+    /**
+     * @return Http|MockObject
+     */
+    protected function getHttpMock()
+    {
+        return $this->getMockBuilder(Http::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+
+    /**
+     * @return RefreshTokenRequest|MockObject
+     */
+    protected function getRequestMock()
+    {
+        $configuration = new Configuration(
+            [
+                'email' => 'john@example.com',
+                'password' => 's3cr37',
+            ]
+        );
+
+        return $this->getMockBuilder(RefreshTokenRequest::class)
+            ->setConstructorArgs(
+                [
+                    $configuration,
+                ]
+            )
+            ->setMethodsExcept(['get'])
+            ->getMock();
     }
 }
