@@ -14,7 +14,7 @@ interface RequestHandlerInterface
      * @param string $uri
      * @param Configuration $configuration
      * @param null|array $requestBody
-     * @param null $file
+     * @param null|resource $file
      * @param null|array $customHeaders ['Header-Name' => 'header value']
      * @return array
      */

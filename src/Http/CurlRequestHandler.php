@@ -30,7 +30,7 @@ class CurlRequestHandler implements RequestHandlerInterface
      * @param string $uri
      * @param Configuration $configuration
      * @param null|array $requestBody
-     * @param null $file
+     * @param null|resource $file
      * @param null|array $customHeaders ['Header-Name' => 'header value']
      * @return array<string, string>
      */
@@ -61,12 +61,30 @@ class CurlRequestHandler implements RequestHandlerInterface
         $headers = array_merge($headers, $customHeaders);
 
         // handle file
-        if (!empty($file)) {
+        if ($file !== null) {
             $boundary = '---------------------' . md5(mt_rand() . microtime());
             $headers['Content-Type'] = 'multipart/form-data; boundary=' . $boundary;
-            $this->prepareMultipart($requestBody, $file, $boundary);
+            $body = $this->generateMultipartBody(
+                $requestBody,
+                $file,
+                $boundary
+            );
+            $this->getCurl()
+                ->setOption(
+                    CURLOPT_POST,
+                    true
+                );
+            $this->getCurl()
+                ->setOption(
+                    CURLOPT_POSTFIELDS,
+                    $body
+                );
         } elseif (!empty($requestBody)) {
-            $this->getCurl()->setOption(CURLOPT_POSTFIELDS, $requestBody);
+            $this->getCurl()
+                ->setOption(
+                    CURLOPT_POSTFIELDS,
+                    $requestBody
+                );
         }
 
         // set curl options
@@ -146,14 +164,15 @@ class CurlRequestHandler implements RequestHandlerInterface
 
     /**
      * @param array $requestBody
-     * @param $file
+     * @param resource $file
      * @param string $boundary
+     * @return string
      */
-    private function prepareMultipart(
+    private function generateMultipartBody(
         array $requestBody,
         $file,
         string $boundary
-    ): void {
+    ): string {
         $disallow = [
             "\0",
             "\"",
@@ -166,6 +185,7 @@ class CurlRequestHandler implements RequestHandlerInterface
         $mimeType = $fileInfo->buffer($data);
 
         // build normal parameters
+        $requestBody = $this->flattenArrayRecursively($requestBody);
         foreach ($requestBody as $key => $value) {
             $key = str_replace($disallow, '_', $key);
             $body[] = implode(
@@ -204,9 +224,10 @@ class CurlRequestHandler implements RequestHandlerInterface
         $body[] = '--' . $boundary . '--';
         $body[] = '';
 
-        // set options
-        $this->getCurl()->setOption(CURLOPT_POST, true);
-        $this->getCurl()->setOption(CURLOPT_POSTFIELDS, implode("\r\n", $body));
+        return implode(
+            "\r\n",
+            $body
+        );
     }
 
 
@@ -218,4 +239,34 @@ class CurlRequestHandler implements RequestHandlerInterface
         return $this->curl;
     }
 
+
+    /**
+     * @param array $array
+     * @param array $result
+     * @param null $parentKey
+     * @return string[]
+     */
+    public function flattenArrayRecursively(
+        array $array,
+        &$result = [],
+        $parentKey = null
+    ): array {
+        foreach ($array as $key => $value) {
+            $itemKey = ($parentKey
+                    ? $parentKey . '['
+                    : '') . $key . ($parentKey
+                    ? ']'
+                    : '');
+            if (is_array($value)) {
+                $this->flattenArrayRecursively(
+                    $value,
+                    $result,
+                    $itemKey
+                );
+            } else {
+                $result[$itemKey] = $value;
+            }
+        }
+        return $result;
+    }
 }

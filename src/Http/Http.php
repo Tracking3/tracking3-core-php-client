@@ -167,7 +167,7 @@ class Http
     /**
      * @param string $uri
      * @param null|array|JsonSerializable $payload
-     * @param null $file
+     * @param null|resource $file
      * @return array
      * @throws Exception
      * @throws JsonException
@@ -269,7 +269,7 @@ class Http
      * @param string $httpMethod
      * @param string $uri
      * @param null|array $requestBody
-     * @param null $file
+     * @param null|resource $file
      * @param null|array $customHeaders
      * @return array
      */
