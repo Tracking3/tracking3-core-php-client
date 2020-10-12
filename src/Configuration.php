@@ -59,7 +59,7 @@ class Configuration
     /**
      * @var null|string
      */
-    private $applicationId;
+    private $idApplication;
 
 
     /**
@@ -92,7 +92,7 @@ class Configuration
      * $config = new Configuration([
      *     'password' => 's3cr37',
      *     'email' => 'john@example.com',
-     *     'applicationId' => 'my-3rd-party-app-integration',
+     *     'idApplication' => 'my-3rd-party-app-integration',
      *     'doAutoLogin' => true|false,
      *     'timeout' => 60,
      *     'apiVersion' => EnvironmentHandlingService::API_VERSION,
@@ -122,7 +122,7 @@ class Configuration
         }
 
         $this->apiVersion = $config['apiVersion'] ?? $this->apiVersion;
-        $this->applicationId = $config['applicationId'] ?? null;
+        $this->idApplication = $config['idApplication'] ?? null;
         $this->doAutoLogin = $config['doAutoLogin'] ?? $this->doAutoLogin;
         $this->environment = $this->parseEnvironment($config['environment'] ?? null);
         $this->timeout = $config['timeout'] ?? $this->timeout;
@@ -350,28 +350,28 @@ class Configuration
     /**
      * @return null|string
      */
-    public function getApplicationId(): ?string
+    public function getIdApplication(): ?string
     {
-        return $this->applicationId;
+        return $this->idApplication;
     }
 
 
     /**
      * @return bool
      */
-    public function hasApplicationId(): bool
+    public function hasIdApplication(): bool
     {
-        return null !== $this->applicationId;
+        return null !== $this->idApplication;
     }
 
 
     /**
-     * @param string $applicationId
+     * @param string $idApplication
      * @return Configuration
      */
-    public function setApplicationId(string $applicationId): Configuration
+    public function setIdApplication(string $idApplication): Configuration
     {
-        $this->applicationId = $applicationId;
+        $this->idApplication = $idApplication;
         return $this;
     }
 

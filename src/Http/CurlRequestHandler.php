@@ -50,15 +50,18 @@ class CurlRequestHandler implements RequestHandlerInterface
         $headers['Content-Type'] = 'application/json';
         $headers['User-Agent'] = 'Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION;
         $headers['X-Strip-Leading-Brackets'] = 'false';
-        if ($configuration->hasApplicationId()) {
-            $headers['X-Application-Id'] = $configuration->getApplicationId();
+        if ($configuration->hasIdApplication()) {
+            $headers['X-Id-Application'] = $configuration->getIdApplication();
         }
         if ($configuration->hasIdApiTransaction()) {
             $headers['X-Id-Api-Transaction'] = $configuration->getIdApiTransaction();
         }
 
         // custom headers will overwrite default headers
-        $headers = array_merge($headers, $customHeaders);
+        $headers = array_merge(
+            $headers,
+            $customHeaders
+        );
 
         // handle file
         if ($file !== null) {

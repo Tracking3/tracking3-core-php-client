@@ -35,7 +35,7 @@ $client = new Client(
         [
             'password' => 's3cr37',
             'email' => 'john@example.com',
-            'applicationId' => 'my-custom-application-id',
+            'idApplication' => 'my-custom-application-id',
         ]
     )
 );
@@ -56,7 +56,7 @@ use Tracking3\Core\Client\EnvironmentHandlingService;
 $config = new Configuration([
     'password' => 's3cr37', // required
     'email' => 'john@example.com', // required
-    'applicationId' => null, // default value
+    'idApplication' => null, // default value
     'doAutoLogin' => true, // default value
     'timeout' => 60, // default value
     'apiVersion' => EnvironmentHandlingService::API_VERSION, // default value
@@ -68,7 +68,7 @@ $config = new Configuration([
 |:---|:---|
 | password (string) | (required) The password for your account. |
 | email (string) | (required) The email address you have used for sign up. |
-| applicationId (string) | This is custom string that, if set, will be added to the request headers. This way you can later analyse where the request came from. (default: null) |
+| idApplication (string) | This is custom string that, if set, will be added to the request headers. This way you can later analyse where the request came from. (default: null) |
 | doAutoLogin (bool) | If *true*, the client will immediately request an refresh and access token with the given email and password. If *false* you have to take care on login by yourself. (default: true) |
 | timeout (int) | Seconds before a timeout exception is raised (default: 60) |
 | apiVersion (string) | The API version that is used for every request. Pay attention, this value may change over time when upgrading to a newer client version. (default: EnvironmentHandlingService::API_VERSION) |

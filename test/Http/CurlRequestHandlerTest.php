@@ -152,7 +152,7 @@ class CurlRequestHandlerTest extends TestCase
         );
 
         $configuration = clone $this->getConfiguration();
-        $configuration->setApplicationId('my-custom-app');
+        $configuration->setIdApplication('my-custom-app');
 
         $requestHandler->doRequest(
             'GET',
@@ -165,7 +165,7 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization' => 'something else',
                 'Content-Type' => 'foo/bar',
                 'User-Agent' => 'something else',
-                'X-Application-Id' => 'my-custom-app',
+                'X-Id-Application' => 'my-custom-app',
                 'X-Strip-Leading-Brackets' => 'miep',
                 'X-something-else' => 'something else',
                 'something-else' => 'something else',
@@ -179,7 +179,7 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: something else',
                 'Content-Type: foo/bar',
                 'User-Agent: something else',
-                'X-Application-Id: my-custom-app',
+                'X-Id-Application: my-custom-app',
                 'X-Strip-Leading-Brackets: miep',
                 'X-something-else: something else',
                 'something-else: something else',
