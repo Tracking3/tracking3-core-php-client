@@ -11,7 +11,11 @@ use Tracking3\Core\Client\Organisation\Organisation;
 
 class OrganisationTest extends TestCase
 {
-    public const FIXTURE_EMAILS_INVOICE = 'john@example.com; jane@example.com';
+    public const FIXTURE_EMAILS_INVOICE_STRING = 'john@example.com; jane@example.com';
+    public const FIXTURE_EMAILS_INVOICE_ARRAY = [
+        'john@example.com',
+        'jane@example.com',
+    ];
 
 
     public const FIXTURE_ID_ORGANISATION = 'some-uuid-version-four';
@@ -39,7 +43,7 @@ class OrganisationTest extends TestCase
                     'country' => BillingAddressTest::FIXTURE_COUNTRY,
                 ],
                 'vatRegNo' => self::FIXTURE_VAT_REG_NO,
-                'emailsInvoice' => self::FIXTURE_EMAILS_INVOICE,
+                'emailsInvoice' => self::FIXTURE_EMAILS_INVOICE_STRING,
             ]
         );
 
@@ -52,8 +56,14 @@ class OrganisationTest extends TestCase
         self::assertEquals(self::FIXTURE_ID_ORGANISATION, $organisation->getIdOrganisation());
         self::assertEquals(self::FIXTURE_LABEL, $organisation->getLabel());
         self::assertInstanceOf(BillingAddress::class, $organisation->getBillingAddress());
-        self::assertEquals(self::FIXTURE_VAT_REG_NO, $organisation->getVatRegNo());
-        self::assertEquals(self::FIXTURE_EMAILS_INVOICE, $organisation->getEmailsInvoice());
+        self::assertEquals(
+            self::FIXTURE_VAT_REG_NO,
+            $organisation->getVatRegNo()
+        );
+        self::assertEquals(
+            self::FIXTURE_EMAILS_INVOICE_ARRAY,
+            $organisation->getEmailsInvoice()
+        );
     }
 
 
@@ -95,7 +105,7 @@ class OrganisationTest extends TestCase
                     'country' => BillingAddressTest::FIXTURE_COUNTRY,
                 ],
                 'vatRegNo' => self::FIXTURE_VAT_REG_NO,
-                'emailsInvoice' => self::FIXTURE_EMAILS_INVOICE,
+                'emailsInvoice' => self::FIXTURE_EMAILS_INVOICE_STRING,
             ]
         );
 
@@ -111,8 +121,14 @@ class OrganisationTest extends TestCase
 
         self::assertEquals(self::FIXTURE_ID_ORGANISATION, $array['idOrganisation']);
         self::assertEquals(self::FIXTURE_LABEL, $array['label']);
-        self::assertEquals(self::FIXTURE_VAT_REG_NO, $array['vatRegNo']);
-        self::assertEquals(self::FIXTURE_EMAILS_INVOICE, $array['emailsInvoice']);
+        self::assertEquals(
+            self::FIXTURE_VAT_REG_NO,
+            $array['vatRegNo']
+        );
+        self::assertEquals(
+            self::FIXTURE_EMAILS_INVOICE_ARRAY,
+            $array['emailsInvoice']
+        );
         self::assertNotNull($array['billingAddress']);
     }
 

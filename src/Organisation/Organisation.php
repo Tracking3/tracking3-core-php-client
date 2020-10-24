@@ -34,11 +34,14 @@ class Organisation implements JsonSerializable
 
 
     /**
-     * @var null|string
+     * @var null|array
      */
     protected $emailsInvoice;
 
 
+    /**
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->idOrganisation = $data['idOrganisation'];
@@ -47,7 +50,16 @@ class Organisation implements JsonSerializable
             ? null
             : new BillingAddress($data['billingAddress']);
         $this->vatRegNo = $data['vatRegNo'] ?? null;
-        $this->emailsInvoice = $data['emailsInvoice'] ?? null;
+        $this->emailsInvoice = isset($data['emailsInvoice'])
+            // trim whitespaces
+            ? array_map(
+                'trim',
+                preg_split(
+                    '/[,;]/',
+                    $data['emailsInvoice']
+                )
+            )
+            : null;
     }
 
 
@@ -74,20 +86,20 @@ class Organisation implements JsonSerializable
 
 
     /**
-     * @return string
-     */
-    public function getIdOrganisation(): string
-    {
-        return $this->idOrganisation;
-    }
-
-
-    /**
      * @return bool
      */
     public function hasIdOrganisation(): bool
     {
         return null !== $this->idOrganisation;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getIdOrganisation(): string
+    {
+        return $this->idOrganisation;
     }
 
 
@@ -146,9 +158,9 @@ class Organisation implements JsonSerializable
 
 
     /**
-     * @return null|string
+     * @return null|string[]
      */
-    public function getEmailsInvoice(): ?string
+    public function getEmailsInvoice(): ?array
     {
         return $this->emailsInvoice;
     }
@@ -159,6 +171,6 @@ class Organisation implements JsonSerializable
      */
     public function hasEmailsInvoice(): bool
     {
-        return null !== $this->emailsInvoice;
+        return !empty($this->emailsInvoice);
     }
 }
