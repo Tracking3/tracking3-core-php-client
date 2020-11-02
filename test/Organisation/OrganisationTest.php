@@ -55,11 +55,31 @@ class OrganisationTest extends TestCase
 
         self::assertEquals(self::FIXTURE_ID_ORGANISATION, $organisation->getIdOrganisation());
         self::assertEquals(self::FIXTURE_LABEL, $organisation->getLabel());
-        self::assertInstanceOf(BillingAddress::class, $organisation->getBillingAddress());
+        self::assertInstanceOf(
+            BillingAddress::class,
+            $organisation->getBillingAddress()
+        );
         self::assertEquals(
             self::FIXTURE_VAT_REG_NO,
             $organisation->getVatRegNo()
         );
+        self::assertEquals(
+            self::FIXTURE_EMAILS_INVOICE_ARRAY,
+            $organisation->getEmailsInvoice()
+        );
+    }
+
+
+    public function testEmailStripTailingColon()
+    {
+        $organisation = new Organisation(
+            [
+                'idOrganisation' => self::FIXTURE_ID_ORGANISATION,
+                'label' => self::FIXTURE_LABEL,
+                'emailsInvoice' => self::FIXTURE_EMAILS_INVOICE_STRING . '; ',
+            ]
+        );
+
         self::assertEquals(
             self::FIXTURE_EMAILS_INVOICE_ARRAY,
             $organisation->getEmailsInvoice()

@@ -56,7 +56,10 @@ class Organisation implements JsonSerializable
                 'trim',
                 preg_split(
                     '/[,;]/',
-                    $data['emailsInvoice']
+                    rtrim(
+                        $data['emailsInvoice'],
+                        ';, '
+                    )
                 )
             )
             : null;
