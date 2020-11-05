@@ -6,10 +6,10 @@ namespace Tracking3\Core\Client;
 
 class EnvironmentHandlingService
 {
-    public const API_URI_ENV_DEVELOPMENT = 'http://api.tracking3.local/api';
+    public const API_URI_ENV_DEVELOPMENT = 'http://api.tracking3.local';
 
 
-    public const API_URI_ENV_PRODUCTION = 'https://api.tracking3.io/api';
+    public const API_URI_ENV_PRODUCTION = 'https://api.tracking3.io';
 
 
     public const API_VERSION = 'v1.0.0';
