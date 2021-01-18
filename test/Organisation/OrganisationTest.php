@@ -36,11 +36,6 @@ class OrganisationTest extends TestCase
                 'billingAddress' => [
                     'firstName' => BillingAddressTest::FIXTURE_FIRST_NAME,
                     'lastName' => BillingAddressTest::FIXTURE_LAST_NAME,
-                    'street' => BillingAddressTest::FIXTURE_STREET,
-                    'number' => BillingAddressTest::FIXTURE_NUMBER,
-                    'city' => BillingAddressTest::FIXTURE_CITY,
-                    'code' => BillingAddressTest::FIXTURE_CODE,
-                    'country' => BillingAddressTest::FIXTURE_COUNTRY,
                 ],
                 'vatRegNo' => self::FIXTURE_VAT_REG_NO,
                 'emailsInvoice' => self::FIXTURE_EMAILS_INVOICE_STRING,
@@ -118,11 +113,6 @@ class OrganisationTest extends TestCase
                 'billingAddress' => [
                     'firstName' => BillingAddressTest::FIXTURE_FIRST_NAME,
                     'lastName' => BillingAddressTest::FIXTURE_LAST_NAME,
-                    'street' => BillingAddressTest::FIXTURE_STREET,
-                    'number' => BillingAddressTest::FIXTURE_NUMBER,
-                    'city' => BillingAddressTest::FIXTURE_CITY,
-                    'code' => BillingAddressTest::FIXTURE_CODE,
-                    'country' => BillingAddressTest::FIXTURE_COUNTRY,
                 ],
                 'vatRegNo' => self::FIXTURE_VAT_REG_NO,
                 'emailsInvoice' => self::FIXTURE_EMAILS_INVOICE_STRING,

@@ -42,13 +42,19 @@ class BillingAddress implements JsonSerializable
     /**
      * @var null|string
      */
-    protected $code;
+    protected $postalCode;
 
 
     /**
      * @var null|string
      */
     protected $country;
+
+
+    /**
+     * @var null|string
+     */
+    protected $countryAlpha2;
 
 
     public function __construct(?array $data)
@@ -58,8 +64,9 @@ class BillingAddress implements JsonSerializable
         $this->street = $data['street'] ?? null;
         $this->number = $data['number'] ?? null;
         $this->city = $data['city'] ?? null;
-        $this->code = $data['code'] ?? null;
+        $this->postalCode = $data['postalCode'] ?? null;
         $this->country = $data['country'] ?? null;
+        $this->countryAlpha2 = $data['countryAlpha2'] ?? null;
     }
 
 
@@ -74,8 +81,9 @@ class BillingAddress implements JsonSerializable
             'street' => $this->street,
             'number' => $this->number,
             'city' => $this->city,
-            'code' => $this->code,
+            'postalCode' => $this->postalCode,
             'country' => $this->country,
+            'countryAlpha2' => $this->countryAlpha2,
         ];
 
         return array_filter(
@@ -180,18 +188,18 @@ class BillingAddress implements JsonSerializable
     /**
      * @return null|string
      */
-    public function getCode(): ?string
+    public function getPostalCode(): ?string
     {
-        return $this->code;
+        return $this->postalCode;
     }
 
 
     /**
      * @return bool
      */
-    public function hasCode(): bool
+    public function hasPostalCode(): bool
     {
-        return null !== $this->code;
+        return null !== $this->postalCode;
     }
 
 
@@ -211,4 +219,23 @@ class BillingAddress implements JsonSerializable
     {
         return $this->country;
     }
+
+
+    /**
+     * @return bool
+     */
+    public function hasCountryAlpha2(): bool
+    {
+        return null !== $this->countryAlpha2;
+    }
+
+
+    /**
+     * @return null|string
+     */
+    public function getCountryAlpha2(): ?string
+    {
+        return $this->countryAlpha2;
+    }
+
 }

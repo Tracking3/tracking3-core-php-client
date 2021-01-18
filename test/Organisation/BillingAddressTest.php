@@ -13,10 +13,10 @@ class BillingAddressTest extends TestCase
     public const FIXTURE_CITY = 'Example City';
 
 
-    public const FIXTURE_CODE = '01234';
-
-
     public const FIXTURE_COUNTRY = 'Germany';
+
+
+    public const FIXTURE_COUNTRY_ALPHA2 = 'DE';
 
 
     public const FIXTURE_FIRST_NAME = 'John';
@@ -26,6 +26,9 @@ class BillingAddressTest extends TestCase
 
 
     public const FIXTURE_NUMBER = '23';
+
+
+    public const FIXTURE_POSTAL_CODE = '01234';
 
 
     public const FIXTURE_STREET = 'High Way';
@@ -40,8 +43,9 @@ class BillingAddressTest extends TestCase
                 'street' => self::FIXTURE_STREET,
                 'number' => self::FIXTURE_NUMBER,
                 'city' => self::FIXTURE_CITY,
-                'code' => self::FIXTURE_CODE,
+                'postalCode' => self::FIXTURE_POSTAL_CODE,
                 'country' => self::FIXTURE_COUNTRY,
+                'countryAlpha2' => self::FIXTURE_COUNTRY_ALPHA2,
             ]
         );
 
@@ -50,16 +54,30 @@ class BillingAddressTest extends TestCase
         self::assertTrue($billingAddress->hasStreet());
         self::assertTrue($billingAddress->hasNumber());
         self::assertTrue($billingAddress->hasCity());
-        self::assertTrue($billingAddress->hasCode());
+        self::assertTrue($billingAddress->hasPostalCode());
         self::assertTrue($billingAddress->hasCountry());
+        self::assertTrue($billingAddress->hasCountryAlpha2());
 
         self::assertEquals(self::FIXTURE_FIRST_NAME, $billingAddress->getFirstName());
         self::assertEquals(self::FIXTURE_LAST_NAME, $billingAddress->getLastName());
         self::assertEquals(self::FIXTURE_STREET, $billingAddress->getStreet());
         self::assertEquals(self::FIXTURE_NUMBER, $billingAddress->getNumber());
-        self::assertEquals(self::FIXTURE_CITY, $billingAddress->getCity());
-        self::assertEquals(self::FIXTURE_CODE, $billingAddress->getCode());
-        self::assertEquals(self::FIXTURE_COUNTRY, $billingAddress->getCountry());
+        self::assertEquals(
+            self::FIXTURE_CITY,
+            $billingAddress->getCity()
+        );
+        self::assertEquals(
+            self::FIXTURE_POSTAL_CODE,
+            $billingAddress->getPostalCode()
+        );
+        self::assertEquals(
+            self::FIXTURE_COUNTRY,
+            $billingAddress->getCountry()
+        );
+        self::assertEquals(
+            self::FIXTURE_COUNTRY_ALPHA2,
+            $billingAddress->getCountryAlpha2()
+        );
     }
 
 
@@ -72,16 +90,18 @@ class BillingAddressTest extends TestCase
         self::assertFalse($billingAddress->hasStreet());
         self::assertFalse($billingAddress->hasNumber());
         self::assertFalse($billingAddress->hasCity());
-        self::assertFalse($billingAddress->hasCode());
+        self::assertFalse($billingAddress->hasPostalCode());
         self::assertFalse($billingAddress->hasCountry());
+        self::assertFalse($billingAddress->hasCountryAlpha2());
 
         self::assertNull($billingAddress->getFirstName());
         self::assertNull($billingAddress->getLastName());
         self::assertNull($billingAddress->getStreet());
         self::assertNull($billingAddress->getNumber());
         self::assertNull($billingAddress->getCity());
-        self::assertNull($billingAddress->getCode());
+        self::assertNull($billingAddress->getPostalCode());
         self::assertNull($billingAddress->getCountry());
+        self::assertNull($billingAddress->getCountryAlpha2());
     }
 
 
@@ -97,8 +117,9 @@ class BillingAddressTest extends TestCase
                 'street' => self::FIXTURE_STREET,
                 'number' => self::FIXTURE_NUMBER,
                 'city' => self::FIXTURE_CITY,
-                'code' => self::FIXTURE_CODE,
+                'postalCode' => self::FIXTURE_POSTAL_CODE,
                 'country' => self::FIXTURE_COUNTRY,
+                'countryAlpha2' => self::FIXTURE_COUNTRY_ALPHA2,
             ]
         );
 
@@ -117,9 +138,22 @@ class BillingAddressTest extends TestCase
         self::assertEquals(self::FIXTURE_LAST_NAME, $array['lastName']);
         self::assertEquals(self::FIXTURE_STREET, $array['street']);
         self::assertEquals(self::FIXTURE_NUMBER, $array['number']);
-        self::assertEquals(self::FIXTURE_CITY, $array['city']);
-        self::assertEquals(self::FIXTURE_CODE, $array['code']);
-        self::assertEquals(self::FIXTURE_COUNTRY, $array['country']);
+        self::assertEquals(
+            self::FIXTURE_CITY,
+            $array['city']
+        );
+        self::assertEquals(
+            self::FIXTURE_POSTAL_CODE,
+            $array['postalCode']
+        );
+        self::assertEquals(
+            self::FIXTURE_COUNTRY,
+            $array['country']
+        );
+        self::assertEquals(
+            self::FIXTURE_COUNTRY_ALPHA2,
+            $array['countryAlpha2']
+        );
     }
 
 
