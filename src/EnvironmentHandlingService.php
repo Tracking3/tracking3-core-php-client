@@ -12,7 +12,7 @@ class EnvironmentHandlingService
     public const API_URI_ENV_PRODUCTION = 'https://api.tracking3.io';
 
 
-    public const API_VERSION = 'v1.0.0';
+    public const API_VERSION = 'v1';
 
 
     public const ENV_DEVELOPMENT = 'development';
@@ -21,7 +21,7 @@ class EnvironmentHandlingService
     public const ENV_PRODUCTION = 'production';
 
 
-    public const SELF_VERSION = '0.0.1-rc1';
+    public const SELF_VERSION = 'v1.2.0';
 
 
     /**
