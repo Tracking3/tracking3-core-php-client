@@ -20,8 +20,9 @@ class ApiObjectFixture implements JsonSerializable
     public $foo;
 
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
+
         return [
             'bar' => $this->bar,
             'foo' => $this->foo,

@@ -9,34 +9,22 @@ use JsonSerializable;
 class Organisation implements JsonSerializable
 {
 
-    /**
-     * @var string
-     */
-    protected $idOrganisation;
+    protected string $idOrganisation;
+
+
+    protected string $label;
+
+
+    protected null|BillingAddress $billingAddress;
+
+
+    protected null|string $vatRegNo;
 
 
     /**
-     * @var string
+     * @var null|string[]
      */
-    protected $label;
-
-
-    /**
-     * @var null|BillingAddress
-     */
-    protected $billingAddress;
-
-
-    /**
-     * @var null|string
-     */
-    protected $vatRegNo;
-
-
-    /**
-     * @var null|array
-     */
-    protected $emailsInvoice;
+    protected null|array $emailsInvoice;
 
 
     /**
@@ -69,8 +57,9 @@ class Organisation implements JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
+
         $return = [
             'idOrganisation' => $this->idOrganisation,
             'label' => $this->label,

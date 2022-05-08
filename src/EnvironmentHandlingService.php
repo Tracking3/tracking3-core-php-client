@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tracking3\Core\Client;
 
+use JetBrains\PhpStorm\Pure;
+
 class EnvironmentHandlingService
 {
-    public const API_URI_ENV_DEVELOPMENT = 'http://api.tracking3.local';
+    public const API_URI_ENV_DEVELOPMENT = 'http://tr3-core';
 
 
     public const API_URI_ENV_PRODUCTION = 'https://api.tracking3.io';
@@ -21,22 +23,20 @@ class EnvironmentHandlingService
     public const ENV_PRODUCTION = 'production';
 
 
-    public const SELF_VERSION = 'v1.2.0';
+    public const SELF_VERSION = 'v2.0.0';
 
 
     /**
      * @param Configuration $configuration
      * @return string
      */
-    public static function buildBaseUri(
+    #[Pure] public static function buildBaseUri(
         Configuration $configuration
-    ): ?string {
-        switch ($configuration->getEnvironment()) {
-            case self::ENV_DEVELOPMENT:
-                return self::API_URI_ENV_DEVELOPMENT . '/' . $configuration->getApiVersion();
-            case self::ENV_PRODUCTION:
-            default:
-                return self::API_URI_ENV_PRODUCTION . '/' . $configuration->getApiVersion();
-        }
+    ): string {
+
+        return match ($configuration->getEnvironment()) {
+            self::ENV_DEVELOPMENT => self::API_URI_ENV_DEVELOPMENT . '/' . $configuration->getApiVersion(),
+            default => self::API_URI_ENV_PRODUCTION . '/' . $configuration->getApiVersion(),
+        };
     }
 }

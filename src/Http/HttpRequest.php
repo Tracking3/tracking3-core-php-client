@@ -10,20 +10,23 @@ interface HttpRequest
      * @param int $name
      * @param mixed $value
      */
-    public function setOption(int $name, $value);
+    public function setOption(
+        int $name,
+        mixed $value
+    );
 
 
     /**
      * @return bool|string
      */
-    public function execute();
+    public function execute(): bool|string;
 
 
     /**
      * @param int $name
      * @return mixed
      */
-    public function getInfo(int $name);
+    public function getInfo(int $name): mixed;
 
 
     /**

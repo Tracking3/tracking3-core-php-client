@@ -4,65 +4,53 @@ declare(strict_types=1);
 
 namespace Tracking3\Core\Client;
 
+use Tracking3\Core\Client\Http\CurlRequestHandler;
+use Tracking3\Core\Client\Http\RequestHandlerInterface;
+
 class Client
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
+    public function __construct(
+        private readonly Configuration $configuration,
+        private readonly RequestHandlerInterface $requestHandler = new CurlRequestHandler()
+    ) {
 
-
-    /**
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $configuration->setClient($this);
-        $this->configuration = $configuration;
+        $this->configuration->setClient($this);
     }
 
 
-    /**
-     * @return Organisation\OrganisationRequest
-     */
     public function organisation(): Organisation\OrganisationRequest
     {
-        return new Organisation\OrganisationRequest($this->configuration);
+
+        return new Organisation\OrganisationRequest(
+            $this->configuration,
+            $this->requestHandler,
+        );
     }
 
 
-    /**
-     * @return Token\AccessTokenRequest
-     */
     public function accessToken(): Token\AccessTokenRequest
     {
-        return new Token\AccessTokenRequest($this->configuration);
+
+        return new Token\AccessTokenRequest(
+            $this->configuration,
+            $this->requestHandler,
+        );
     }
 
 
-    /**
-     * @return Token\RefreshTokenRequest
-     */
     public function refreshToken(): Token\RefreshTokenRequest
     {
-        return new Token\RefreshTokenRequest($this->configuration);
+
+        return new Token\RefreshTokenRequest(
+            $this->configuration,
+            $this->requestHandler,
+        );
     }
 
 
-    /**
-     * @return Configuration
-     */
     public function getConfiguration(): Configuration
     {
+
         return $this->configuration;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasConfiguration(): bool
-    {
-        return null !== $this->configuration;
     }
 }

@@ -9,52 +9,28 @@ use JsonSerializable;
 class BillingAddress implements JsonSerializable
 {
 
-    /**
-     * @var null|string
-     */
-    protected $firstName;
+    protected null|string $firstName;
 
 
-    /**
-     * @var null|string
-     */
-    protected $lastName;
+    protected null|string $lastName;
 
 
-    /**
-     * @var null|string
-     */
-    protected $street;
+    protected null|string $street;
 
 
-    /**
-     * @var null|string
-     */
-    protected $number;
+    protected null|string $number;
 
 
-    /**
-     * @var null|string
-     */
-    protected $city;
+    protected null|string $city;
 
 
-    /**
-     * @var null|string
-     */
-    protected $postalCode;
+    protected null|string $postalCode;
 
 
-    /**
-     * @var null|string
-     */
-    protected $country;
+    protected null|string $country;
 
 
-    /**
-     * @var null|string
-     */
-    protected $countryAlpha2;
+    protected null|string $countryAlpha2;
 
 
     public function __construct(?array $data)
@@ -73,8 +49,9 @@ class BillingAddress implements JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
+
         $return = [
             'firstName' => $this->firstName,
             'lastName' => $this->lastName,

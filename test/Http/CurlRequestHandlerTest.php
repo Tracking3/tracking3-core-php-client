@@ -12,17 +12,16 @@ use Tracking3\Core\Client\EnvironmentHandlingService;
 use Tracking3\Core\Client\Exception\Connection;
 use Tracking3\Core\Client\Exception\Timeout;
 use Tracking3\Core\Client\Http\CurlRequestHandler;
-use Tracking3\Core\ClientTest\ReflectionTrait;
 
 class CurlRequestHandlerTest extends TestCase
 {
-    use ReflectionTrait;
 
     /**
      * @throws JsonException
      */
     public function testDoRequestDefault(): void
     {
+
         $returnPayload = [
             'foo' => 'bar',
             'miep',
@@ -42,9 +41,18 @@ class CurlRequestHandlerTest extends TestCase
         );
 
         // options
-        self::assertEquals('GET', $curlMock->options[CURLOPT_CUSTOMREQUEST]);
-        self::assertEquals('my/uri', $curlMock->options[CURLOPT_URL]);
-        self::assertEquals(60, $curlMock->options[CURLOPT_TIMEOUT]);
+        self::assertEquals(
+            'GET',
+            $curlMock->options[CURLOPT_CUSTOMREQUEST]
+        );
+        self::assertEquals(
+            'my/uri',
+            $curlMock->options[CURLOPT_URL]
+        );
+        self::assertEquals(
+            60,
+            $curlMock->options[CURLOPT_TIMEOUT]
+        );
 
         // headers
         $this->assertHeaders(
@@ -59,16 +67,25 @@ class CurlRequestHandlerTest extends TestCase
         );
 
         // request was send
-        self::assertEquals(1, $curlMock->executed);
+        self::assertEquals(
+            1,
+            $curlMock->executed
+        );
 
         // connection was closed
-        self::assertEquals(1, $curlMock->closed);
+        self::assertEquals(
+            1,
+            $curlMock->closed
+        );
 
         // return payload
         self::assertSame(
             [
                 'status' => $curlMock->info[CURLINFO_HTTP_CODE],
-                'body' => json_encode($returnPayload, JSON_THROW_ON_ERROR),
+                'body' => json_encode(
+                    $returnPayload,
+                    JSON_THROW_ON_ERROR
+                ),
             ],
             $return
         );
@@ -80,6 +97,7 @@ class CurlRequestHandlerTest extends TestCase
      */
     public function testDoRequestExpectTimeout(): void
     {
+
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
         [
@@ -93,7 +111,12 @@ class CurlRequestHandlerTest extends TestCase
         $configuration->setTimeout(1);
 
         $this->expectException(Timeout::class);
-        $this->expectExceptionMessage(sprintf('Request exceeded timeout of %d', $configuration->getTimeout()));
+        $this->expectExceptionMessage(
+            sprintf(
+                'Request exceeded timeout of %d',
+                $configuration->getTimeout()
+            )
+        );
         $this->expectExceptionCode(1592833821);
 
         $requestHandler->doRequest(
@@ -101,7 +124,6 @@ class CurlRequestHandlerTest extends TestCase
             'my/uri',
             $configuration,
         );
-
     }
 
 
@@ -110,6 +132,7 @@ class CurlRequestHandlerTest extends TestCase
      */
     public function testDoRequestExpectConnectionError(): void
     {
+
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
         [
@@ -140,16 +163,13 @@ class CurlRequestHandlerTest extends TestCase
      */
     public function testDoRequestCustomHeaders(): void
     {
+
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
         [
             $requestHandler,
             $curlMock,
-        ] = $this->prepareRequestHandler(
-            null,
-            0,
-            200,
-        );
+        ] = $this->prepareRequestHandler();
 
         $configuration = clone $this->getConfiguration();
         $configuration->setIdApplication('my-custom-app');
@@ -193,16 +213,13 @@ class CurlRequestHandlerTest extends TestCase
      */
     public function testAuthorizationHeaderEmailPassword(): void
     {
+
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
         [
             $requestHandler,
             $curlMock,
-        ] = $this->prepareRequestHandler(
-            null,
-            0,
-            200,
-        );
+        ] = $this->prepareRequestHandler();
 
         $configuration = clone $this->getConfiguration();
         $configuration->setEmail('foo@bar.com');
@@ -233,16 +250,13 @@ class CurlRequestHandlerTest extends TestCase
      */
     public function testAuthorizationHeaderRefreshToken(): void
     {
+
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
         [
             $requestHandler,
             $curlMock,
-        ] = $this->prepareRequestHandler(
-            null,
-            0,
-            200,
-        );
+        ] = $this->prepareRequestHandler();
 
         $configuration = clone $this->getConfiguration();
         $configuration->setRefreshToken('json.refresh.token');
@@ -272,16 +286,13 @@ class CurlRequestHandlerTest extends TestCase
      */
     public function testAuthorizationHeaderAccessToken(): void
     {
+
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
         [
             $requestHandler,
             $curlMock,
-        ] = $this->prepareRequestHandler(
-            null,
-            0,
-            200,
-        );
+        ] = $this->prepareRequestHandler();
 
         $configuration = clone $this->getConfiguration();
         $configuration->setAccessToken('json.access.token');
@@ -308,16 +319,13 @@ class CurlRequestHandlerTest extends TestCase
 
     public function testIdApiTransactionHeaderIsPresent(): void
     {
+
         /** @var CurlRequestHandler $requestHandler */
         /** @var CurlMock $curlMock */
         [
             $requestHandler,
             $curlMock,
-        ] = $this->prepareRequestHandler(
-            null,
-            0,
-            200,
-        );
+        ] = $this->prepareRequestHandler();
 
         $configuration = clone $this->getConfiguration();
         $configuration->setIdApiTransaction('uuid-api-transaction');
@@ -345,6 +353,7 @@ class CurlRequestHandlerTest extends TestCase
 
     protected function getConfiguration(): Configuration
     {
+
         return new Configuration(
             [
                 'email' => 'john@example.com',
@@ -361,8 +370,13 @@ class CurlRequestHandlerTest extends TestCase
     protected function assertHeaders(
         CurlMock $curlMock,
         array $expectedHeaders
-    ): void {
-        $additionalHeaders = array_diff($curlMock->options[CURLOPT_HTTPHEADER], $expectedHeaders);
+    ): void
+    {
+
+        $additionalHeaders = array_diff(
+            $curlMock->options[CURLOPT_HTTPHEADER],
+            $expectedHeaders
+        );
         self::assertCount(
             0,
             $additionalHeaders,
@@ -375,7 +389,10 @@ class CurlRequestHandlerTest extends TestCase
             )
         );
 
-        $missingHeaders = array_diff($expectedHeaders, $curlMock->options[CURLOPT_HTTPHEADER]);
+        $missingHeaders = array_diff(
+            $expectedHeaders,
+            $curlMock->options[CURLOPT_HTTPHEADER]
+        );
         self::assertCount(
             0,
             $missingHeaders,
@@ -402,6 +419,7 @@ class CurlRequestHandlerTest extends TestCase
         int $errorCode = 0,
         int $httpStatusCode = 200
     ): array {
+
         /** @var CurlRequestHandler|MockObject $requestHandler */
         $requestHandler = $this->getMockBuilder(CurlRequestHandler::class)
             ->setMethodsExcept(
@@ -412,7 +430,10 @@ class CurlRequestHandlerTest extends TestCase
             ->getMock();
 
         $curlMock = new CurlMock();
-        $curlMock->result = ")]}',\n" . json_encode($returnPayload, JSON_THROW_ON_ERROR);
+        $curlMock->result = ")]}',\n" . json_encode(
+                $returnPayload,
+                JSON_THROW_ON_ERROR
+            );
         $curlMock->errorCode = $errorCode;
         $curlMock->info[CURLINFO_HTTP_CODE] = $httpStatusCode;
 

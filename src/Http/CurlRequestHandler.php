@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tracking3\Core\Client\Http;
 
 use finfo;
+use JsonException;
 use Tracking3\Core\Client\Configuration;
 use Tracking3\Core\Client\EnvironmentHandlingService;
 use Tracking3\Core\Client\Exception\Connection;
@@ -13,15 +14,9 @@ use Tracking3\Core\Client\Exception\Timeout;
 class CurlRequestHandler implements RequestHandlerInterface
 {
 
-    /**
-     * @var Curl
-     */
-    private $curl;
-
-
-    public function __construct()
-    {
-        $this->curl = new Curl();
+    public function __construct(
+        private readonly HttpRequest $curl = new Curl()
+    ) {
     }
 
 
@@ -33,6 +28,7 @@ class CurlRequestHandler implements RequestHandlerInterface
      * @param null|resource $file
      * @param null|array $customHeaders ['Header-Name' => 'header value']
      * @return array<string, string>
+     * @throws JsonException
      */
     public function doRequest(
         string $httpMethod,
@@ -40,7 +36,7 @@ class CurlRequestHandler implements RequestHandlerInterface
         Configuration $configuration,
         array $requestBody = null,
         $file = null,
-        array $customHeaders = []
+        ?array $customHeaders = []
     ): array {
 
         // default headers
@@ -50,10 +46,10 @@ class CurlRequestHandler implements RequestHandlerInterface
         $headers['Content-Type'] = 'application/json';
         $headers['User-Agent'] = 'Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION;
         $headers['X-Strip-Leading-Brackets'] = 'false';
-        if ($configuration->hasIdApplication()) {
+        if (null !== $configuration->getIdApplication()) {
             $headers['X-Id-Application'] = $configuration->getIdApplication();
         }
-        if ($configuration->hasIdApiTransaction()) {
+        if (null !== $configuration->getIdApiTransaction()) {
             $headers['X-Id-Api-Transaction'] = $configuration->getIdApiTransaction();
         }
 
@@ -91,39 +87,114 @@ class CurlRequestHandler implements RequestHandlerInterface
         }
 
         // set curl options
-        $this->getCurl()->setOption(CURLOPT_CUSTOMREQUEST, $httpMethod);
-        $this->getCurl()->setOption(CURLOPT_HTTPHEADER, $this->convertHeaders($headers));
-        $this->getCurl()->setOption(CURLOPT_RETURNTRANSFER, true);
-        $this->getCurl()->setOption(CURLOPT_TIMEOUT, $configuration->getTimeout());
-        $this->getCurl()->setOption(CURLOPT_URL, $uri);
+        $this->getCurl()
+            ->setOption(
+                CURLOPT_CUSTOMREQUEST,
+                $httpMethod
+            );
+        $this->getCurl()
+            ->setOption(
+                CURLOPT_HTTPHEADER,
+                $this->convertHeaders($headers)
+            );
+        $this->getCurl()
+            ->setOption(
+                CURLOPT_RETURNTRANSFER,
+                true
+            );
+        $this->getCurl()
+            ->setOption(
+                CURLOPT_TIMEOUT,
+                $configuration->getTimeout()
+            );
+        $this->getCurl()
+            ->setOption(
+                CURLOPT_URL,
+                $uri
+            );
 
         // do request
-        $response = $this->getCurl()->execute();
-        $httpStatus = $this->getCurl()->getInfo(CURLINFO_HTTP_CODE);
-        $errorCode = $this->getCurl()->getErrorCode();
-        $error = $this->getCurl()->getError();
+        $response = $this->getCurl()
+            ->execute();
+        $httpStatus = $this->getCurl()
+            ->getInfo(CURLINFO_HTTP_CODE);
+        $errorCode = $this->getCurl()
+            ->getErrorCode();
+        $error = $this->getCurl()
+            ->getError();
 
         if ($errorCode === 28 && $httpStatus === 0) {
             throw new Timeout(
-                sprintf('Request exceeded timeout of %d', $configuration->getTimeout()),
+                sprintf(
+                    'Request exceeded timeout of %d',
+                    $configuration->getTimeout()
+                ),
+                null,
                 1592833821
             );
         }
 
-        $this->getCurl()->close();
+        $this->getCurl()
+            ->close();
 
         if ($errorCode) {
             throw new Connection(
                 $error,
+                null,
                 $errorCode
             );
         }
 
         return [
             'status' => $httpStatus,
-            'body' => substr($response, 6),
             // strip leading brackets
+            'body' => substr(
+                $response,
+                6
+            ),
         ];
+    }
+
+
+    /**
+     * @return HttpRequest
+     */
+    public function getCurl(): HttpRequest
+    {
+
+        return $this->curl;
+    }
+
+
+    /**
+     * @param array $array
+     * @param array $result
+     * @param null $parentKey
+     * @return string[]
+     */
+    public function flattenArrayRecursively(
+        array $array,
+        array &$result = [],
+        $parentKey = null
+    ): array {
+
+        foreach ($array as $key => $value) {
+            $itemKey = ($parentKey
+                    ? $parentKey . '['
+                    : '') . $key . ($parentKey
+                    ? ']'
+                    : '');
+            if (is_array($value)) {
+                $this->flattenArrayRecursively(
+                    $value,
+                    $result,
+                    $itemKey
+                );
+            } else {
+                $result[$itemKey] = $value;
+            }
+        }
+        return $result;
     }
 
 
@@ -134,11 +205,12 @@ class CurlRequestHandler implements RequestHandlerInterface
     private function getAuthorizationHeaderValue(
         Configuration $configuration
     ): string {
-        if ($configuration->hasAccessToken()) {
+
+        if (null !== $configuration->getAccessToken()) {
             return 'Bearer ' . $configuration->getAccessToken();
         }
 
-        if ($configuration->hasRefreshToken()) {
+        if (null !== $configuration->getRefreshToken()) {
             return 'Bearer ' . $configuration->getRefreshToken();
         }
 
@@ -153,6 +225,7 @@ class CurlRequestHandler implements RequestHandlerInterface
     private function convertHeaders(
         array $headers
     ): array {
+
         $return = [];
 
         foreach ($headers as $key => $value) {
@@ -176,6 +249,7 @@ class CurlRequestHandler implements RequestHandlerInterface
         $file,
         string $boundary
     ): string {
+
         $disallow = [
             "\0",
             "\"",
@@ -190,7 +264,11 @@ class CurlRequestHandler implements RequestHandlerInterface
         // build normal parameters
         $requestBody = $this->flattenArrayRecursively($requestBody);
         foreach ($requestBody as $key => $value) {
-            $key = str_replace($disallow, '_', $key);
+            $key = str_replace(
+                $disallow,
+                '_',
+                $key
+            );
             $body[] = implode(
                 "\r\n",
                 [
@@ -202,9 +280,16 @@ class CurlRequestHandler implements RequestHandlerInterface
         }
 
         // build file parameter
-        $splitFilePath = explode(DIRECTORY_SEPARATOR, $filePath);
+        $splitFilePath = explode(
+            DIRECTORY_SEPARATOR,
+            $filePath
+        );
         $filePath = end($splitFilePath);
-        $filePath = str_replace($disallow, '_', $filePath);
+        $filePath = str_replace(
+            $disallow,
+            '_',
+            $filePath
+        );
         $body[] = implode(
             "\r\n",
             [
@@ -215,10 +300,14 @@ class CurlRequestHandler implements RequestHandlerInterface
             ]
         );
 
-        // add boundary for each parameters
+        // add boundary for each parameter
         array_walk(
             $body,
-            static function (&$part) use ($boundary) {
+            static function (&$part) use
+            (
+                $boundary
+            ) {
+
                 $part = "--{$boundary}\r\n{$part}";
             }
         );
@@ -231,45 +320,5 @@ class CurlRequestHandler implements RequestHandlerInterface
             "\r\n",
             $body
         );
-    }
-
-
-    /**
-     * @return HttpRequest
-     */
-    public function getCurl(): HttpRequest
-    {
-        return $this->curl;
-    }
-
-
-    /**
-     * @param array $array
-     * @param array $result
-     * @param null $parentKey
-     * @return string[]
-     */
-    public function flattenArrayRecursively(
-        array $array,
-        &$result = [],
-        $parentKey = null
-    ): array {
-        foreach ($array as $key => $value) {
-            $itemKey = ($parentKey
-                    ? $parentKey . '['
-                    : '') . $key . ($parentKey
-                    ? ']'
-                    : '');
-            if (is_array($value)) {
-                $this->flattenArrayRecursively(
-                    $value,
-                    $result,
-                    $itemKey
-                );
-            } else {
-                $result[$itemKey] = $value;
-            }
-        }
-        return $result;
     }
 }

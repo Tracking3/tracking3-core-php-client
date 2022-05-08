@@ -4,18 +4,29 @@ declare(strict_types=1);
 
 namespace Tracking3\Core\ClientTest;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tracking3\Core\Client\AbstractRequest;
 use Tracking3\Core\Client\Client;
 use Tracking3\Core\Client\Configuration;
+use Tracking3\Core\Client\Exception\EmptyOrMalformedRequestBody;
+use Tracking3\Core\Client\Exception\FailedDependency;
+use Tracking3\Core\Client\Exception\Forbidden;
 use Tracking3\Core\Client\Exception\InvalidArgumentException;
+use Tracking3\Core\Client\Exception\MethodNotAllowed;
+use Tracking3\Core\Client\Exception\NotFound;
+use Tracking3\Core\Client\Exception\RequestTimeout;
+use Tracking3\Core\Client\Exception\RuntimeException;
+use Tracking3\Core\Client\Exception\ServerError;
+use Tracking3\Core\Client\Exception\TooManyRequests;
+use Tracking3\Core\Client\Exception\Unauthorized;
+use Tracking3\Core\Client\Exception\UnprocessableEntity;
 use Tracking3\Core\ClientTest\Fixtures\AbstractRequestImplementationFixture;
 
 class AbstractRequestTest extends TestCase
 {
     public function testAutoLogin(): void
     {
+
         $configuration = clone $this->getConfiguration();
 
         $clientMock = $this->getMockBuilder(Client::class)
@@ -36,19 +47,9 @@ class AbstractRequestTest extends TestCase
     }
 
 
-    protected function getConfiguration(): Configuration
-    {
-        return new Configuration(
-            [
-                'email' => 'john@example.com',
-                'password' => 's3cr37',
-            ]
-        );
-    }
-
-
     public function testIsUuidV4ValidForValidUuidV4(): void
     {
+
         $mock = $this->getRequestMock();
 
         self::assertTrue($mock->isUuidV4Valid('fa438bfe-cb93-47cb-be73-f4b87eb8c16b'));
@@ -60,6 +61,7 @@ class AbstractRequestTest extends TestCase
 
     public function testIsUuidV4ValidForInvalidUuid(): void
     {
+
         $mock = $this->getRequestMock();
 
         $this->expectException(InvalidArgumentException::class);
@@ -69,6 +71,7 @@ class AbstractRequestTest extends TestCase
 
     public function testIsUuidV4ValidForValidUuidV1(): void
     {
+
         $mock = $this->getRequestMock();
 
         $this->expectException(InvalidArgumentException::class);
@@ -78,6 +81,7 @@ class AbstractRequestTest extends TestCase
 
     public function testIsUuidV4ValidForValidUuidV6(): void
     {
+
         $mock = $this->getRequestMock();
 
         $this->expectException(InvalidArgumentException::class);
@@ -86,15 +90,160 @@ class AbstractRequestTest extends TestCase
 
 
     /**
-     * @return MockObject|AbstractRequest
+     * @dataProvider dataProviderForTestThrowStatusCodeException
+     * @param string $expectedException
+     * @param int $expectedExceptionCode
+     * @param string $expectedExceptionMessage
+     * @param array $input
+     * @return void
      */
-    protected function getRequestMock()
-    {
-        /** @var AbstractRequest $mock */
-        return $this->getMockBuilder(AbstractRequestImplementationFixture::class)
-            ->setMethodsExcept(['isUuidV4Valid'])
-            ->disableOriginalConstructor()
-            ->getMock();
+    public function testThrowStatusCodeException(
+        string $expectedException,
+        int $expectedExceptionCode,
+        string $expectedExceptionMessage,
+        array $input
+    ): void {
 
+        $this->expectException($expectedException);
+        $this->expectExceptionCode($expectedExceptionCode);
+        $this->expectExceptionMessage($expectedExceptionMessage);
+
+        AbstractRequest::handleNonSuccessResponse($input);
+    }
+
+
+    public function dataProviderForTestThrowStatusCodeException(): array
+    {
+
+        return [
+            'error-400' => [
+                'expectedException' => EmptyOrMalformedRequestBody::class,
+                'expectedExceptionCode' => 1592800400,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_400,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-401' => [
+                'expectedException' => Unauthorized::class,
+                'expectedExceptionCode' => 1592800401,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_401,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-403' => [
+                'expectedException' => Forbidden::class,
+                'expectedExceptionCode' => 1592800403,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_403,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-404' => [
+                'expectedException' => NotFound::class,
+                'expectedExceptionCode' => 1592800404,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_404,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-405' => [
+                'expectedException' => MethodNotAllowed::class,
+                'expectedExceptionCode' => 1592800405,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_405,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-408' => [
+                'expectedException' => RequestTimeout::class,
+                'expectedExceptionCode' => 1592800408,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_408,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-422' => [
+                'expectedException' => UnprocessableEntity::class,
+                'expectedExceptionCode' => 1592800422,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_422,
+                    'statusPhrase' => 'my-custom-message',
+                    'messages' => [
+                        'elementOrFieldset' => [
+                            'validator' => 'message',
+                        ],
+                    ],
+                ],
+            ],
+            'error-424' => [
+                'expectedException' => FailedDependency::class,
+                'expectedExceptionCode' => 1592800424,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_424,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-429' => [
+                'expectedException' => TooManyRequests::class,
+                'expectedExceptionCode' => 1592800429,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_429,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-500' => [
+                'expectedException' => ServerError::class,
+                'expectedExceptionCode' => 1592800500,
+                'expectedExceptionMessage' => 'my-custom-message',
+                'input' => [
+                    'statusCode' => AbstractRequest::RESPONSE_CODE_500,
+                    'statusPhrase' => 'my-custom-message',
+                ],
+            ],
+            'error-unknown' => [
+                'expectedException' => RuntimeException::class,
+                'expectedExceptionCode' => 1592800001,
+                'expectedExceptionMessage' => 'Unexpected HTTP response code #1',
+                'input' => [
+                    'statusCode' => 1,
+                    'statusPhrase' => 'Unexpected HTTP response code #1',
+                ],
+            ],
+        ];
+    }
+
+
+    protected function getConfiguration(): Configuration
+    {
+
+        return new Configuration(
+            [
+                'email' => 'john@example.com',
+                'password' => 's3cr37',
+            ]
+        );
+    }
+
+
+    /**
+     * @return AbstractRequest
+     */
+    protected function getRequestMock(): AbstractRequest
+    {
+
+        return new AbstractRequestImplementationFixture(
+            $this->createStub(Configuration::class)
+        );
     }
 }

@@ -38,7 +38,7 @@ class OrganisationProjectsRequest extends AbstractRequest
             ]
         );
 
-        $data = $this->getHttp()->get($uri);
+        $data = $this->getReal($uri);
 
         if ($returnAsObject) {
             return new ProjectList($data['payload']);
@@ -78,7 +78,7 @@ class OrganisationProjectsRequest extends AbstractRequest
             ]
         );
 
-        $data = $this->getHttp()->get($uri);
+        $data = $this->getReal($uri);
 
         if ($returnAsObject) {
             return new Project($data['payload']);

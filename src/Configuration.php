@@ -14,74 +14,42 @@ class Configuration
     ];
 
 
-    /**
-     * @var string
-     */
-    private $password;
+    private string $password;
 
 
-    /**
-     * @var string
-     */
-    private $email;
+    private string $email;
 
 
-    /**
-     * @var string
-     */
-    private $accessToken;
+    private null|string $accessToken = null;
 
 
-    /**
-     * @var string
-     */
-    private $refreshToken;
+    private null|string $refreshToken = null;
 
 
-    /**
-     * @var string
-     */
-    private $environment = EnvironmentHandlingService::ENV_PRODUCTION;
+    private string $environment = EnvironmentHandlingService::ENV_PRODUCTION;
 
 
-    /**
-     * @var string
-     */
-    private $apiVersion = EnvironmentHandlingService::API_VERSION;
+    private string $apiVersion = EnvironmentHandlingService::API_VERSION;
 
 
-    /**
-     * @var int
-     */
-    private $timeout = 60;
+    private int $timeout = 60;
 
 
-    /**
-     * @var null|string
-     */
-    private $idApplication;
+    private null|string $idApplication;
 
 
-    /**
-     * @var null|string
-     */
-    private $idApiTransaction;
+    private null|string $idApiTransaction;
 
 
     /**
      * If `true` this client automatically tries to attempt an access token
      * before the first request is executed.
      * If `false` you have to deal with access tokens/login yourself.
-     *
-     * @var bool
      */
-    private $doAutoLogin = true;
+    private bool $doAutoLogin = true;
 
 
-    /**
-     * @var Client
-     */
-    private $client;
+    private Client $client;
 
 
     /**
@@ -145,15 +113,6 @@ class Configuration
 
 
     /**
-     * @return bool
-     */
-    public function hasPassword(): bool
-    {
-        return null !== $this->password;
-    }
-
-
-    /**
      * @return string
      */
     public function getPassword(): string
@@ -183,15 +142,6 @@ class Configuration
 
 
     /**
-     * @return bool
-     */
-    public function hasEmail(): bool
-    {
-        return null !== $this->email;
-    }
-
-
-    /**
      * @param string $email
      * @return Configuration
      */
@@ -203,20 +153,12 @@ class Configuration
 
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getAccessToken(): string
+    public function getAccessToken(): ?string
     {
+
         return $this->accessToken;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasAccessToken(): bool
-    {
-        return null !== $this->accessToken;
     }
 
 
@@ -232,20 +174,12 @@ class Configuration
 
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getRefreshToken(): string
+    public function getRefreshToken(): ?string
     {
+
         return $this->refreshToken;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasRefreshToken(): bool
-    {
-        return null !== $this->refreshToken;
     }
 
 
@@ -257,15 +191,6 @@ class Configuration
     {
         $this->refreshToken = $refreshToken;
         return $this;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasEnvironment(): bool
-    {
-        return null !== $this->environment;
     }
 
 
@@ -299,15 +224,6 @@ class Configuration
 
 
     /**
-     * @return bool
-     */
-    public function hasApiVersion(): bool
-    {
-        return null !== $this->apiVersion;
-    }
-
-
-    /**
      * @param string $apiVersion
      * @return Configuration
      */
@@ -315,15 +231,6 @@ class Configuration
     {
         $this->apiVersion = $apiVersion;
         return $this;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasTimeout(): bool
-    {
-        return null !== $this->timeout;
     }
 
 
@@ -357,15 +264,6 @@ class Configuration
 
 
     /**
-     * @return bool
-     */
-    public function hasIdApplication(): bool
-    {
-        return null !== $this->idApplication;
-    }
-
-
-    /**
      * @param string $idApplication
      * @return Configuration
      */
@@ -386,29 +284,11 @@ class Configuration
 
 
     /**
-     * @return bool
-     */
-    public function hasIdApiTransaction(): bool
-    {
-        return null !== $this->idApiTransaction;
-    }
-
-
-    /**
      * @param null|string $idApiTransaction
      */
     public function setIdApiTransaction(?string $idApiTransaction): void
     {
         $this->idApiTransaction = $idApiTransaction;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasDoAutoLogin(): bool
-    {
-        return null !== $this->doAutoLogin;
     }
 
 
@@ -438,15 +318,6 @@ class Configuration
     public function getClient(): Client
     {
         return $this->client;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasClient(): bool
-    {
-        return null !== $this->client;
     }
 
 

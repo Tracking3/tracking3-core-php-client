@@ -24,6 +24,6 @@ interface RequestHandlerInterface
         Configuration $configuration,
         array $requestBody = null,
         $file = null,
-        array $customHeaders = []
+        ?array $customHeaders = []
     ): array;
 }

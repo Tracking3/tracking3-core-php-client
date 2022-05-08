@@ -5,69 +5,40 @@ declare(strict_types=1);
 namespace Tracking3\Core\Client\Project;
 
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use JsonSerializable;
 
 class Stats implements JsonSerializable
 {
-    /**
-     * @var null|int
-     */
-    protected $files;
+    protected null|int $files;
 
 
-    /**
-     * @var null|int
-     */
-    protected $filesTrend;
+    protected null|int $filesTrend;
 
 
-    /**
-     * @var null|array
-     */
-    protected $runtime;
+    protected null|array $runtime;
 
 
-    /**
-     * @var null|DateTime
-     */
-    protected $runtimeEnd;
+    protected null|DateTime $runtimeEnd;
 
 
-    /**
-     * @var null|DateTime
-     */
-    protected $runtimeStart;
+    protected null|DateTime $runtimeStart;
 
 
-    /**
-     * @var null|int
-     */
-    protected $size;
+    protected null|int $size;
 
 
-    /**
-     * @var null|int
-     */
-    protected $sizeLimit;
+    protected null|int $sizeLimit;
 
 
-    /**
-     * @var null|int
-     */
-    protected $sizeTrend;
+    protected null|int $sizeTrend;
 
 
-    /**
-     * @var null|int
-     */
-    protected $users;
+    protected null|int $users;
 
 
-    /**
-     * @var null|int
-     */
-    protected $usersTrend;
+    protected null|int $usersTrend;
 
 
     /**
@@ -95,20 +66,18 @@ class Stats implements JsonSerializable
 
     /**
      * @return array
-     * @noinspection ReturnTypeCanBeDeclaredInspection
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
+
         $return = [
             'files' => $this->getFiles(),
             'filesTrend' => $this->getFilesTrend(),
             'runtime' => $this->getRuntime(),
-            'runtimeEnd' => $this->hasRuntimeEnd()
-                ? $this->getRuntimeEnd()->format(DateTime::ATOM)
-                : null,
-            'runtimeStart' => $this->hasRuntimeStart()
-                ? $this->getRuntimeStart()->format(DateTime::ATOM)
-                : null,
+            'runtimeEnd' => $this->getRuntimeEnd()
+                ?->format(DateTimeInterface::ATOM),
+            'runtimeStart' => $this->getRuntimeStart()
+                ?->format(DateTimeInterface::ATOM),
             'size' => $this->getSize(),
             'sizeLimit' => $this->getSizeLimit(),
             'sizeTrend' => $this->getSizeTrend(),

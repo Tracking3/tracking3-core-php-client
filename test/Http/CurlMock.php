@@ -9,85 +9,81 @@ use Tracking3\Core\Client\Http\HttpRequest;
 class CurlMock implements HttpRequest
 {
 
-    /**
-     * @var array
-     */
-    public $options = [];
+    public int $closed = 0;
 
 
-    /**
-     * @var int
-     */
-    public $executed = 0;
-
-
-    /**
-     * @var array
-     */
-    public $info = [
-        CURLINFO_HTTP_CODE => 200,
-    ];
+    public string $error = '';
 
 
     /**
      * 0 (zero) -> no error
-     *
-     * @var int
      */
-    public $errorCode = 0;
+    public int $errorCode = 0;
 
 
-    /**
-     * @var string
-     */
-    public $error = '';
+    public int $executed = 0;
 
 
-    /**
-     * @var int
-     */
-    public $closed = 0;
+    public array $info = [
+        CURLINFO_HTTP_CODE => 200,
+    ];
 
 
-    /**
-     * @var mixed
-     */
-    public $result;
+    public array $options = [];
 
 
-    public function setOption(int $name, $value)
-    {
+    public mixed $result = ")]}',\n{}";
+
+
+    public function setOption(
+        int $name,
+        $value
+    ): void {
+
         $this->options[$name] = $value;
     }
 
 
-    public function execute()
+    public function getOption(
+        int $name
+    ): mixed {
+
+        return $this->options[$name];
+    }
+
+
+    public function execute(): bool|string
     {
+
         $this->executed++;
         return $this->result;
     }
 
 
-    public function getInfo(int $name)
+    public function getInfo(int $name): mixed
     {
+
         return $this->info[$name];
     }
 
 
     public function getErrorCode(): int
     {
+
         return $this->errorCode;
     }
 
 
     public function getError(): string
     {
+
         return $this->error;
     }
 
 
     public function close(): void
     {
+
         $this->closed++;
     }
 }

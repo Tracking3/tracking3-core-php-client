@@ -35,7 +35,7 @@ class OrganisationRequest extends AbstractRequest
             ]
         );
 
-        $data = $this->getHttp()->get($uri);
+        $data = $this->getReal($uri);
 
         if ($returnAsObject) {
             return new Organisation($data['payload']);
@@ -50,6 +50,10 @@ class OrganisationRequest extends AbstractRequest
      */
     public function projects(): OrganisationProjectsRequest
     {
-        return new OrganisationProjectsRequest($this->configuration);
+
+        return new OrganisationProjectsRequest(
+            $this->configuration,
+            $this->requestHandler,
+        );
     }
 }

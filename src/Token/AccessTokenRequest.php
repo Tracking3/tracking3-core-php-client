@@ -25,7 +25,7 @@ class AccessTokenRequest extends AbstractRequest
             ]
         );
 
-        $response = $this->getHttp()->get($uri);
+        $response = $this->getReal($uri);
 
         $this->configuration->setAccessToken($response['payload']['jwt']);
 

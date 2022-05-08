@@ -1,25 +1,32 @@
 <?php
+// @codeCoverageIgnoreStart
 
 declare(strict_types=1);
-// @codeCoverageIgnoreStart
 
 namespace Tracking3\Core\Client\Http;
 
+use CurlHandle;
+use Tracking3\Core\Client\Exception\RuntimeException;
+
 class Curl implements HttpRequest
 {
-
-    /**
-     * @var false|resource
-     */
-    private $curl;
+    private CurlHandle $curl;
 
 
-    /**
-     * CurlRequestHandler constructor.
-     */
     public function __construct()
     {
-        $this->curl = curl_init();
+
+        $curl = curl_init();
+
+        if (!$curl) {
+            throw new RuntimeException(
+                'Missing cURL extension',
+                null,
+                1651840652
+            );
+        }
+
+        $this->curl = $curl;
     }
 
 
@@ -30,15 +37,21 @@ class Curl implements HttpRequest
         int $name,
         $value
     ): void {
-        curl_setopt($this->curl, $name, $value);
+
+        curl_setopt(
+            $this->curl,
+            $name,
+            $value
+        );
     }
 
 
     /**
      * @inheritDoc
      */
-    public function execute()
+    public function execute(): bool|string
     {
+
         return curl_exec($this->curl);
     }
 
@@ -46,9 +59,13 @@ class Curl implements HttpRequest
     /**
      * @inheritDoc
      */
-    public function getInfo(int $name)
+    public function getInfo(int $name): mixed
     {
-        return curl_getinfo($this->curl, $name);
+
+        return curl_getinfo(
+            $this->curl,
+            $name
+        );
     }
 
 
@@ -57,6 +74,7 @@ class Curl implements HttpRequest
      */
     public function getErrorCode(): int
     {
+
         return curl_errno($this->curl);
     }
 
@@ -66,6 +84,7 @@ class Curl implements HttpRequest
      */
     public function getError(): string
     {
+
         return curl_error($this->curl);
     }
 
@@ -75,6 +94,7 @@ class Curl implements HttpRequest
      */
     public function close(): void
     {
+
         curl_close($this->curl);
     }
 }

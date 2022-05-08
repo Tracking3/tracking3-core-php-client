@@ -33,7 +33,7 @@ class RefreshTokenRequest extends AbstractRequest
                 ? 'true'
                 : 'false');
 
-        $response = $this->getHttp()->get($uri);
+        $response = $this->getReal($uri);
 
         $this->configuration->setRefreshToken($response['payload']['jwt']);
 

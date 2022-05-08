@@ -9,10 +9,54 @@ use Tracking3\Core\Client\Client;
 
 class ClientTest extends TestCase
 {
-    public function testClassInstances(): void
-    {
-        self::assertTrue(method_exists(Client::class, 'accessToken'));
-        self::assertTrue(method_exists(Client::class, 'refreshToken'));
-        self::assertTrue(method_exists(Client::class, 'organisation'));
+    use ConfigurationTrait;
+
+    /**
+     * @param string $method
+     * @return void
+     * @dataProvider dataProviderForTestClassInstances
+     */
+    public function testClassInstances(
+        string $method
+    ): void {
+
+        self::assertTrue(
+            method_exists(
+                Client::class,
+                $method
+            )
+        );
     }
+
+
+    public function testCanCreateClient(): void
+    {
+
+        $client = new Client(
+            $this->getConfiguration()
+        );
+
+        self::assertInstanceOf(
+            Client::class,
+            $client
+        );
+    }
+
+
+    public function dataProviderForTestClassInstances(): array
+    {
+
+        return [
+            'accessToken' => [
+                'method' => 'accessToken',
+            ],
+            'refreshToken' => [
+                'method' => 'refreshToken',
+            ],
+            'organisation' => [
+                'method' => 'organisation',
+            ],
+        ];
+    }
+
 }

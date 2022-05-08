@@ -5,70 +5,44 @@ declare(strict_types=1);
 namespace Tracking3\Core\Client\Project;
 
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use JsonSerializable;
 
 class Project implements JsonSerializable
 {
 
-    /**
-     * @var null|string
-     */
-    protected $idProject;
+    protected null|string $idProject;
 
 
-    /**
-     * @var null|string
-     */
-    protected $idOwner;
+    protected null|string $idOwner;
 
 
-    /**
-     * @var null|string
-     */
-    protected $label;
+    protected null|string $label;
 
 
-    /**
-     * @var null|bool
-     */
-    protected $active;
+    protected null|bool $active;
 
 
-    /**
-     * @var null|DateTime
-     */
-    protected $created;
+    protected null|DateTime $created;
 
 
-    /**
-     * @var null|float
-     */
-    protected $fps;
+    protected null|float $fps;
 
 
-    /**
-     * @var null|int
-     */
-    protected $resolutionHeight;
+    protected null|int $resolutionHeight;
 
 
-    /**
-     * @var null|int
-     */
-    protected $resolutionWidth;
+    protected null|int $resolutionWidth;
 
 
-    /**
-     * @var null|Stats
-     */
-    protected $stats;
+    protected null|Stats $stats;
 
 
     /**
      * @var null|string[]
      */
-    protected $users;
+    protected null|array $users;
 
 
     /**
@@ -96,18 +70,17 @@ class Project implements JsonSerializable
 
     /**
      * @return array
-     * @noinspection ReturnTypeCanBeDeclaredInspection
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
+
         $return = [
             'idProject' => $this->getIdProject(),
             'idOwner' => $this->getIdOwner(),
             'label' => $this->getLabel(),
             'active' => $this->isActive(),
-            'created' => $this->hasCreated()
-                ? $this->getCreated()->format(DateTime::ATOM)
-                : null,
+            'created' => $this->getCreated()
+                ?->format(DateTimeInterface::ATOM),
             'fps' => $this->getFps(),
             'resolutionHeight' => $this->getResolutionHeight(),
             'resolutionWidth' => $this->getResolutionWidth(),
