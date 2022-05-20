@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tracking3\Core\ClientTest\Http;
 
 use JsonException;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tracking3\Core\Client\Configuration;
 use Tracking3\Core\Client\EnvironmentHandlingService;
@@ -351,6 +350,55 @@ class CurlRequestHandlerTest extends TestCase
     }
 
 
+    /**
+     * @throws JsonException
+     */
+    public function testRequestBodyFormatJsonPayload(): void
+    {
+
+        /** @var CurlRequestHandler $requestHandler */
+        /** @var CurlMock $curlMock */
+        [
+            $requestHandler,
+            $curlMock,
+        ] = $this->prepareRequestHandler();
+
+
+        $configuration = clone $this->getConfiguration();
+        $configuration->setIdApiTransaction('uuid-api-transaction');
+
+        $requestBody = [
+            'foo' => 'bar',
+            'baz' => [
+                'bazfoo' => 'bar',
+                'bazbar' => 'foo',
+                'numbers' => [
+                    'braz',
+                    'miep',
+                ],
+            ],
+        ];
+
+        $requestHandler->doRequest(
+            'GET',
+            'my/uri',
+            $configuration,
+            $requestBody,
+        );
+
+        // request payload
+        self::assertEquals(
+            $requestBody,
+            json_decode(
+                $curlMock->getOption(CURLOPT_POSTFIELDS),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            )
+        );
+    }
+
+
     protected function getConfiguration(): Configuration
     {
 
@@ -418,16 +466,8 @@ class CurlRequestHandlerTest extends TestCase
         ?array $returnPayload = null,
         int $errorCode = 0,
         int $httpStatusCode = 200
-    ): array {
-
-        /** @var CurlRequestHandler|MockObject $requestHandler */
-        $requestHandler = $this->getMockBuilder(CurlRequestHandler::class)
-            ->setMethodsExcept(
-                [
-                    'doRequest',
-                ]
-            )
-            ->getMock();
+    ): array
+    {
 
         $curlMock = new CurlMock();
         $curlMock->result = ")]}',\n" . json_encode(
@@ -437,8 +477,9 @@ class CurlRequestHandlerTest extends TestCase
         $curlMock->errorCode = $errorCode;
         $curlMock->info[CURLINFO_HTTP_CODE] = $httpStatusCode;
 
-        $requestHandler->method('getCurl')
-            ->willReturn($curlMock);
+        $requestHandler = new CurlRequestHandler(
+            $curlMock
+        );
 
         return [
             $requestHandler,

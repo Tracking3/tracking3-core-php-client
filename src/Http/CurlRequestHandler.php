@@ -82,7 +82,10 @@ class CurlRequestHandler implements RequestHandlerInterface
             $this->getCurl()
                 ->setOption(
                     CURLOPT_POSTFIELDS,
-                    $requestBody
+                    json_encode(
+                        $requestBody,
+                        JSON_THROW_ON_ERROR
+                    )
                 );
         }
 
