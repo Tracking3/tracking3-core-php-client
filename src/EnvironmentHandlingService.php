@@ -23,7 +23,7 @@ class EnvironmentHandlingService
     public const ENV_PRODUCTION = 'production';
 
 
-    public const SELF_VERSION = 'v2.0.0';
+    public const SELF_VERSION = 'v2.0.1';
 
 
     /**
