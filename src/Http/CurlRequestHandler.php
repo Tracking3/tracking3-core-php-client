@@ -45,7 +45,6 @@ class CurlRequestHandler implements RequestHandlerInterface
         $headers['Authorization'] = $this->getAuthorizationHeaderValue($configuration);
         $headers['Content-Type'] = 'application/json';
         $headers['User-Agent'] = 'Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION;
-        $headers['X-Strip-Leading-Brackets'] = 'false';
         if (null !== $configuration->getIdApplication()) {
             $headers['X-Id-Application'] = $configuration->getIdApplication();
         }
@@ -150,11 +149,7 @@ class CurlRequestHandler implements RequestHandlerInterface
 
         return [
             'status' => $httpStatus,
-            // strip leading brackets
-            'body' => substr(
-                $response,
-                6
-            ),
+            'body' => $response,
         ];
     }
 

@@ -30,7 +30,7 @@ class RefreshTokenRequestTest extends TestCase
             CURLINFO_HTTP_CODE => 200,
         ];
 
-        $curlMock->result = ")]}',\n" . json_encode(
+        $curlMock->result = json_encode(
                 [
                     'payload' => [
                         // payload to object mapping is tested somewhere else

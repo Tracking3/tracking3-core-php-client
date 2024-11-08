@@ -32,7 +32,7 @@ class CurlMock implements HttpRequest
     public array $options = [];
 
 
-    public mixed $result = ")]}',\n{}";
+    public mixed $result = '{}';
 
 
     public function setOption(
