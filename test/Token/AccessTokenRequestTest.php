@@ -8,7 +8,6 @@ use JsonException;
 use PHPUnit\Framework\TestCase;
 use Tracking3\Core\Client\EnvironmentHandlingService;
 use Tracking3\Core\Client\Http\CurlRequestHandler;
-use Tracking3\Core\Client\Http\Http;
 use Tracking3\Core\Client\Token\AccessTokenRequest;
 use Tracking3\Core\ClientTest\ConfigurationTrait;
 use Tracking3\Core\ClientTest\Http\CurlMock;
@@ -28,7 +27,7 @@ class AccessTokenRequestTest extends TestCase
             CURLINFO_HTTP_CODE => 200,
         ];
 
-        $curlMock->result = ")]}',\n" . json_encode(
+        $curlMock->result = json_encode(
                 [
                     'payload' => [
                         // payload to object mapping is tested somewhere else

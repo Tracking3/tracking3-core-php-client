@@ -61,7 +61,6 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Basic am9obkBleGFtcGxlLmNvbTpzM2NyMzc=',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
-                'X-Strip-Leading-Brackets: false',
             ]
         );
 
@@ -185,7 +184,6 @@ class CurlRequestHandlerTest extends TestCase
                 'Content-Type' => 'foo/bar',
                 'User-Agent' => 'something else',
                 'X-Id-Application' => 'my-custom-app',
-                'X-Strip-Leading-Brackets' => 'miep',
                 'X-something-else' => 'something else',
                 'something-else' => 'something else',
             ]
@@ -199,7 +197,6 @@ class CurlRequestHandlerTest extends TestCase
                 'Content-Type: foo/bar',
                 'User-Agent: something else',
                 'X-Id-Application: my-custom-app',
-                'X-Strip-Leading-Brackets: miep',
                 'X-something-else: something else',
                 'something-else: something else',
             ]
@@ -238,7 +235,6 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Basic Zm9vQGJhci5jb206bWllcA==',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
-                'X-Strip-Leading-Brackets: false',
             ]
         );
     }
@@ -274,7 +270,6 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Bearer json.refresh.token',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
-                'X-Strip-Leading-Brackets: false',
             ]
         );
     }
@@ -310,7 +305,6 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Bearer json.access.token',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
-                'X-Strip-Leading-Brackets: false',
             ]
         );
     }
@@ -343,7 +337,6 @@ class CurlRequestHandlerTest extends TestCase
                 'Authorization: Basic am9obkBleGFtcGxlLmNvbTpzM2NyMzc=',
                 'Content-Type: application/json',
                 'User-Agent: Tracking3 Core PHP Client ' . EnvironmentHandlingService::SELF_VERSION,
-                'X-Strip-Leading-Brackets: false',
                 'X-Id-Api-Transaction: uuid-api-transaction',
             ]
         );
@@ -470,7 +463,7 @@ class CurlRequestHandlerTest extends TestCase
     {
 
         $curlMock = new CurlMock();
-        $curlMock->result = ")]}',\n" . json_encode(
+        $curlMock->result = json_encode(
                 $returnPayload,
                 JSON_THROW_ON_ERROR
             );

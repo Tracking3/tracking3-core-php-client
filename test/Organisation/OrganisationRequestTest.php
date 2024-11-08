@@ -32,7 +32,7 @@ class OrganisationRequestTest extends TestCase
             CURLINFO_HTTP_CODE => 200,
         ];
 
-        $curlMock->result = ")]}',\n" . json_encode(
+        $curlMock->result = json_encode(
                 [
                     'payload' => [
                         'idOrganisation' => self::ID_ORGANISATION,
